@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/logo.png" alt="Qodroid logo" width="120" />
+<img src="docs/qodroid-logo.png" alt="Qodroid logo" width="120" />
 
 # Qodroid
 
