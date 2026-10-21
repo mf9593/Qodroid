@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Qodroid - 在 Android 上运行 Linux 与 Windows 虚拟机</title>
+<meta name="description" content="Qodroid：基于 ExTV/Podroid 修改的 QEMU/AVF 虚拟机应用，无需 root，在手机上运行 Linux 容器桌面与 Windows 虚拟机。" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --text: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #4f8ef7;
+    --accent2: #7c5cf0;
+    --border: #262b36;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  header {
+    padding: 72px 0 40px;
+    text-align: center;
+  }
+  header img.logo { width: 96px; height: 96px; border-radius: 22px; margin-bottom: 20px; }
+  header h1 { font-size: 40px; letter-spacing: 1px; margin-bottom: 8px; }
+  header p.tag { color: var(--muted); font-size: 17px; }
+  .badges { margin: 20px 0 8px; }
+  .badges img { margin: 0 4px; }
+  .download {
+    text-align: center;
+    margin: 32px 0 8px;
+  }
+  .btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 14px 44px;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(79, 142, 247, .35);
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .note { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin: 24px 0;
+  }
+  section.card h2 { font-size: 22px; margin-bottom: 16px; }
+  ul.features { list-style: none; }
+  ul.features li {
+    padding: 10px 0 10px 34px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  ul.features li:last-child { border-bottom: none; }
+  ul.features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid2 h3 { font-size: 16px; margin-bottom: 6px; color: var(--text); }
+  .grid2 p { color: var(--muted); font-size: 14px; }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 40px 0 60px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 600px) {
+    header { padding-top: 48px; }
+    header h1 { font-size: 30px; }
+    section.card { padding: 22px 20px; }
+    .grid2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="docs/logo.png" alt="Qodroid logo" />
+  <h1>Qodroid</h1>
+  <p class="tag">在 Android 手机上运行真实的 Linux 与 Windows 虚拟机</p>
+  <div class="badges">
+    <img src="https://img.shields.io/badge/Android-8%2B-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android 8+" />
+    <img src="https://img.shields.io/badge/arch-arm64-orange?style=flat-square" alt="arm64" />
+    <img src="https://img.shields.io/badge/license-GPLv2-blue?style=flat-square" alt="GPL v2" />
+  </div>
+  <div class="download">
+    <a class="btn" href="https://github.com/mf9593/Qodroid/releases">下载 APK</a>
+    <div class="note">当前版本 2.0.0 · 无需 root · 支持 QEMU 与 AVF 双引擎</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="card">
+    <h2>这是什么</h2>
+    <p>Qodroid 是在手机本地跑的完整虚拟机应用，基于 <a href="https://github.com/ExTV/Podroid" style="color:var(--accent);">ExTV/Podroid</a> 修改而来。它在 arm64 手机上运行一个真实的 Alpine Linux 虚拟机（自带内核，不是 chroot/proot），也可以启动 x86 的 Windows 虚拟机。应用内置终端、图形桌面查看器与容器管理，开箱即用。</p>
+  </section>
+
+  <section class="card">
+    <h2>核心特性</h2>
+    <ul class="features">
+      <li><strong>真实的 Linux VM</strong> - Alpine + 自编译内核，可安装 Podman / Docker / LXC，行为与服务器一致</li>
+      <li><strong>Windows 支持</strong> - 加载自己的 Windows 磁盘镜像，走 q35 + OVMF/UEFI，VNC 查看桌面</li>
+      <li><strong>双引擎</strong> - 普通设备用 QEMU（TCG），支持 pKVM 的设备可选 AVF 硬件加速</li>
+      <li><strong>内置终端</strong> - 完整 xterm-256color，多种主题字体，实时改窗口大小</li>
+      <li><strong>X11 / VNC 桌面查看器</strong> - 触摸、键盘、鼠标、音频，可拖动窗口</li>
+      <li><strong>容器备份</strong> - 备份/恢复 podman 与 docker 容器和镜像，支持镜像源镜像配置</li>
+      <li><strong>共享文件夹</strong> - 把手机 Download 目录挂进虚拟机</li>
+      <li><strong>SSH 与端口转发</strong> - 从电脑 ssh 进虚拟机，或把 guest 端口暴露到局域网</li>
+      <li><strong>中英文界面</strong> - 内置使用文档与常见问题</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>快速开始</h2>
+    <p>下载并安装 APK → 打开应用 → 点「启动虚拟机」→ 等待 Ready → 打开终端即可使用。所有操作无需 root。</p>
+    <p style="color:var(--muted);font-size:14px;margin-top:8px;">Linux 默认账号 root / podroid（SSH 端口 9922）。<br />Windows 需要先在应用内选择磁盘镜像，并在 Windows 网卡里把 DNS 设为 8.8.8.8 / 223.5.5.5 以正常上网。</p>
+  </section>
+
+  <section class="card">
+    <h2>Windows 虚拟机要点</h2>
+    <div class="grid2">
+      <div>
+        <h3>启动前设置</h3>
+        <p>选择磁盘镜像、切换 UEFI/BIOS、打开/关闭 VNC、是否把 VNC 暴露到局域网（默认仅本机 127.0.0.1）。</p>
+      </div>
+      <div>
+        <h3>桌面交互</h3>
+        <p>内置 VNC 查看器，底部快捷键含 DEL / ENTER / WIN（单按弹出开始菜单）/ 方向键 / F 键等。</p>
+      </div>
+      <div>
+        <h3>鼠标漂移</h3>
+        <p>Windows 启动默认启用 USB 绝对定位指针（usb-tablet），指针不再漂移。</p>
+      </div>
+      <div>
+        <h3>网络</h3>
+        <p>DHCP 分配 IP 后，需要在 Windows 网卡手动设置 DNS（8.8.8.8 / 223.5.5.5）才能解析域名；ping 不通是 slirp 特性，不代表断网。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>许可证与上游</h2>
+    <p>Qodroid 是基于 <a href="https://github.com/ExTV/Podroid" style="color:var(--accent);">ExTV/Podroid</a> 修改的版本，两者均以 <a href="LICENSE" style="color:var(--accent);">GNU GPL v2</a> 发布。完整源代码见仓库，也遵循 GPL v2 条款提供、可修改与再分发。</p>
+  </section>
+
+</div>
+
+<footer>
+  Qodroid · <a href="https://github.com/mf9593/Qodroid">GitHub 仓库</a> · 基于 ExTV/Podroid (GPL v2)
+</footer>
+
+</body>
+</html>

@@ -1,34 +1,42 @@
 <div align="center">
 
-<img src="docs/logo.png" alt="Podroid logo" width="120" />
+<img src="docs/logo.png" alt="Qodroid logo" width="120" />
 
-# Podroid
+# Qodroid
 
-**Run Linux containers and a full Linux desktop on your Android phone. No root.**
+**在 Android 手机上运行 Linux 容器、Linux 桌面与 Windows 虚拟机，无需 root。**
 
-A real Alpine Linux VM with its own kernel - not a chroot or proot trick - so **Podman, Docker and LXC** behave exactly like they do on a server.
+Qodroid 是 [ExTV/Podroid](https://github.com/ExTV/Podroid) 的修改版（GPL v2），包名 `com.pxkf.qodroid`。同样基于 QEMU / AVF，提供真实的 Alpine Linux 虚拟机以及 x86 Windows 虚拟机支持。
 
-[![Release](https://img.shields.io/github/v/release/ExTV/Podroid?include_prereleases&style=flat-square&label=release&color=blue)](https://github.com/ExTV/Podroid/releases)
-[![Downloads](https://img.shields.io/github/downloads/ExTV/Podroid/total?style=flat-square&color=brightgreen)](https://github.com/ExTV/Podroid/releases)
-[![Stars](https://img.shields.io/github/stars/ExTV/Podroid?style=flat-square&color=yellow)](https://github.com/ExTV/Podroid/stargazers)
-[![License](https://img.shields.io/github/license/ExTV/Podroid?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/github/license/mf9593/Qodroid?style=flat-square)](LICENSE)
 ![Android 8+](https://img.shields.io/badge/Android-8%2B-3DDC84?style=flat-square&logo=android&logoColor=white)
 ![arm64](https://img.shields.io/badge/arch-arm64-orange?style=flat-square)
 
-[**Website**](https://extv.github.io/Podroid/) · [**Documentation**](https://extv.github.io/Podroid/guide/) · [**Download APK**](https://github.com/ExTV/Podroid/releases/latest)
-
-<table>
-  <tr>
-    <td align="center" width="25%"><img src="docs/screenshots/01-home-idle.png" alt="Home screen before the VM starts" width="190" /><br /><sub><b>Home</b></sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/02-home-running.png" alt="Home screen with the VM running and network info" width="190" /><br /><sub><b>Running</b></sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/03-terminal-fastfetch.png" alt="Built-in terminal showing Alpine system info" width="190" /><br /><sub><b>Terminal</b></sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/04-quick-settings.png" alt="Terminal Quick Settings with themes and fonts" width="190" /><br /><sub><b>Themes &amp; fonts</b></sub></td>
-  </tr>
-</table>
+[**下载页**](https://mf9593.github.io/Qodroid/) · [**GitHub 仓库**](https://github.com/mf9593/Qodroid) · [**上游 Podroid**](https://github.com/ExTV/Podroid) · [**Release**](https://github.com/mf9593/Qodroid/releases)
 
 </div>
 
-## What you get
+## Qodroid 2.0.0 相比上游的主要改动（中文说明）
+
+- **Windows 虚拟机支持**：可直接加载 x86 磁盘镜像，q35 + OVMF/UEFI，内置 VNC 桌面查看器。
+- **Windows 启动优化**：
+  - 默认启用 USB 绝对定位指针（`-usb -device usb-tablet`），触屏下鼠标不再漂移；
+  - VNC 增加「暴露到局域网」开关，默认仅本机 `127.0.0.1`，开启后允许局域网其它设备连接；
+  - Windows 模式下隐藏「自动登录 Linux」选项；
+  - 若 Windows 无法联网，请在其网卡手动把 DNS 设为 `8.8.8.8` / `223.5.5.5`（QEMU slirp 的内置 DNS 在 Android 上转发不可靠；ping 不通是 slirp 不转发 ICMP 所致，不代表断网）。
+- **容器引擎回落**：检测到 podman 为空时自动改用 docker（适配使用 1Panel 等管理工具、其容器位于 docker 的场景）；容器备份同时支持 docker 与 podman，不再依赖 guest 内的旧脚本目录。
+- **X11 / VNC 查看器改进**：
+  - 底部快捷键栏与终端对齐，补全 `DEL` / `ENTER` / `SHIFT` / `PASTE`；
+  - 新增 `WIN` 键——单按发送 Win 键弹出开始菜单；
+  - 默认触摸模式改为触摸板（Trackpad），设置面板默认选中同步。
+- **移除磁盘镜像备份**：备份/恢复统一走容器备份，不再包含虚拟机磁盘镜像导出。
+- **关于页**：新增「开源与许可证」区块，内置 GPL v2 全文，断网可见。
+- **内置使用文档**：关于页可进入「使用文档」，涵盖启动、创建容器、端口转发、备份与常见问题。
+- **其他**：文件页灰色提示居中；更新日志独立成页；镜像源下拉与当前值显示。
+
+> 本仓库以「全新 git init」方式建立（不含上游提交历史），上游项目为 [ExTV/Podroid](https://github.com/ExTV/Podroid)，许可证 GPL v2，版权声明见 [LICENSE](LICENSE)。
+
+## What you get (original)
 
 - **Podman, Docker and LXC** - pre-installed, ready the moment it boots
 - **A real VM** - Alpine Linux on a custom kernel via QEMU, or hardware-accelerated AVF on supported pKVM devices
