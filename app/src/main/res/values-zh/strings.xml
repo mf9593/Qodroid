@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Podroid - Rootless Podman for Android
+  Copyright (C) 2024-2026 Podroid contributors
+-->
+<resources>
+    <string name="app_name">Qodroid</string>
+
+    <!-- VM Status -->
+    <string name="vm_status">虚拟机状态</string>
+    <string name="status_starting">启动中</string>
+    <string name="status_running">运行中</string>
+    <string name="status_stopped">已停止</string>
+    <string name="status_idle">空闲</string>
+    <string name="status_stopping">正在关闭…</string>
+    <string name="stopping_vm">正在停止虚拟机…</string>
+    <string name="stopping_action">正在停止…</string>
+
+    <!-- Network -->
+    <string name="network">网络</string>
+    <string name="phone_ip">手机 IP</string>
+    <string name="phone_ip_also">另一地址 (%1$s)</string>
+    <string name="ssh">SSH</string>
+    <string name="port_forwards">端口转发</string>
+
+    <!-- Last Session -->
+    <string name="last_session">上次会话</string>
+    <string name="booted_in">启动耗时</string>
+    <string name="build">版本</string>
+
+    <!-- Actions -->
+    <string name="settings">设置</string>
+    <string name="open_terminal">打开终端</string>
+    <string name="home_auto_login">启动时自动登录 Linux</string>
+    <string name="home_login_working">正在登录…</string>
+    <string name="home_login_ok">已登录</string>
+    <string name="home_login_no_session">还没有运行中的 Linux shell。请先启动虚拟机并打开终端页。</string>
+    <string name="home_login_failed">等了 60 秒仍未登录成功。通常是在 Linux 里执行 passwd 改过 root 密码；也可能是登录提示一直没出现，去终端页看一眼。</string>
+    <string name="home_login_default_password">默认账号是 root / podroid。在 Linux 里执行 passwd 可以改密码——改完之后这个按钮就没法替你登录了。</string>
+    <string name="restart">重启</string>
+    <string name="stop">停止</string>
+    <string name="start_vm">启动虚拟机</string>
+    <string name="download">下载</string>
+    <string name="later">稍后</string>
+    <string name="dismiss">关闭</string>
+    <string name="back">返回</string>
+    <string name="continue_label">继续</string>
+    <string name="get_started">开始使用</string>
+    <string name="not_now">暂不</string>
+
+    <!-- Storage -->
+    <string name="persistent_storage">持久化存储</string>
+    <string name="storage_description">用于安装的软件包、容器镜像和您的文件。您可以稍后在设置中增大存储空间，但无法缩小。</string>
+
+    <!-- VM Config -->
+    <string name="configure_vm">配置您的虚拟机</string>
+    <string name="vm_config_description">默认配置针对性能和电池进行了优化。随时可在设置中更改。</string>
+    <string name="resources">资源</string>
+    <string name="cpu_cores">CPU 核心数</string>
+    <string name="cpu_cores_hint">核心越多不一定越快：在 QEMU (TCG) 后端，实测 8 核比 4 核更慢。AVF 后端可正常扩展。</string>
+    <string name="storage_grow_hint">存储空间可以稍后增大，但无法缩小。更大的存储空间将在虚拟机下次启动时生效。</string>
+    <string name="ram_label">内存</string>
+    <string name="network_label">网络</string>
+    <string name="ssh_access">SSH 访问</string>
+    <string name="ssh_password_hint">ssh root@&lt;手机-ip&gt; -p 9922   (密码: podroid)</string>
+    <string name="load_balance">负载均衡</string>
+    <string name="load_balance_description">根据本机自动调整 CPU、内存、存储和带宽。</string>
+    <string name="load_balance_storage_hint">存储大小已自动设置。在下一步关闭负载均衡后可手动选择。</string>
+    <string name="bandwidth_limit">带宽限制</string>
+    <string name="bandwidth_unlimited">无限制</string>
+
+    <!-- Storage Access -->
+    <string name="downloads_sharing">下载文件夹共享</string>
+    <string name="storage_access_description">可选。通过 virtio-9p 将 Android 下载文件夹挂载到虚拟机。</string>
+    <string name="enable_downloads_sharing">启用下载文件夹共享</string>
+    <string name="grant_storage_access">授予存储权限</string>
+    <string name="requires_android_11">在此设备上，共享需要授予下方的存储权限（Android 11 及以上使用完整文件访问权限）。</string>
+    <string name="storage_access_warning">警告：某些设备上这可能导致虚拟机崩溃。如果启动失败，请禁用。</string>
+
+    <!-- Settings Sections -->
+    <string name="appearance">外观</string>
+    <string name="dark_theme">深色主题</string>
+    <string name="dynamic_color">动态颜色（Material You）</string>
+    <string name="vm_resources">虚拟机资源</string>
+    <string name="stop_vm_to_change">停止虚拟机后才能更改这些设置。</string>
+    <string name="storage">存储</string>
+    <string name="autostart_on_boot">开机时启动虚拟机</string>
+    <string name="autostart_on_boot_desc">手机启动后自动开启虚拟机。自动化应用也可以通过 com.pxkf.qodroid.action.START_VM 和 STOP_VM 意图操作触发。</string>
+    <string name="reset_vm">重置虚拟机（删除所有数据）</string>
+    <string name="reset_vm_description">完全重置应用？</string>
+    <string name="reset_vm_text">这将清除所有应用数据，包括虚拟机存储、设置和端口规则。应用将关闭并恢复到刚安装时的状态。</string>
+    <string name="reset_everything">全部重置</string>
+    <string name="cancel">取消</string>
+    <string name="advanced">高级</string>
+    <string name="hide_advanced">隐藏高级选项</string>
+    <string name="show_advanced">显示高级选项</string>
+    <string name="backend">后端</string>
+    <string name="auto">自动</string>
+    <string name="avf_kvm">AVF (KVM)</string>
+    <string name="qemu_tcg">QEMU (TCG)</string>
+    <string name="extra_qemu_args">额外的 QEMU 参数</string>
+    <string name="extra_kernel_cmdline">额外的内核命令行</string>
+    <string name="kernel_cmdline_helper">在 console=ttyAMA0 之后追加 - 控制调度器、缓解措施、日志级别等。</string>
+    <string name="qemu_args_helper">-cpu, -accel, -object, -device, -overcommit 等。空格分隔。</string>
+    <string name="reset_field_confirm_title">重置%1$s？</string>
+    <string name="reset_field_confirm_body">这将清除您的自定义设置并恢复默认值。</string>
+    <string name="about">关于</string>
+    <string name="architecture">架构</string>
+    <string name="linux_distro">Linux 发行版</string>
+    
+    <string name="avf_diagnostic">AVF (pKVM) 诊断</string>
+    <string name="running_avf_diagnostic">运行 AVF 诊断…</string>
+    <string name="probing_avf">正在探测…</string>
+    <string name="unknown_error">未知错误</string>
+    <string name="verbose_avf_logging">详细 AVF 日志</string>
+    <string name="close">关闭</string>
+    <string name="add_port_forward">添加端口转发</string>
+    <string name="android_port">Android 端口</string>
+    <string name="vm_port">虚拟机端口</string>
+    <string name="e_g_8080">例如：8080</string>
+    <string name="e_g_80">例如：80</string>
+    <string name="tcp">TCP</string>
+    <string name="udp">UDP</string>
+    <string name="both">两者</string>
+    <string name="enter_valid_ports">输入有效的端口号 (1-65535)</string>
+    <string name="port_already_forwarded">端口 %1$d (%2$s) 已转发</string>
+    <string name="port_reserved">端口 %1$d 已保留给应用内桌面</string>
+    <string name="port_forward_table_full">端口转发已达上限 %1$d 条，请先删除一条。</string>
+    <string name="port_forward_partial_add">端口 %1$d：%2$s 未能添加，端口转发数量已达上限。</string>
+    <string name="reset">重置</string>
+    <string name="remove">删除</string>
+    <string name="port_forward_purpose_ssh">SSH</string>
+    <string name="port_forward_purpose_ssh_off">SSH (已关闭)</string>
+    <string name="port_forward_purpose_vnc">桌面，仅限本机</string>
+    <string name="port_forward_purpose_audio">桌面音频，仅限本机</string>
+    <string name="port_forwards_count">端口转发 (%1$d)</string>
+    <string name="port_forwards_clean">全部清除</string>
+    <string name="port_forwards_clean_confirm_title">移除所有端口转发？</string>
+    <string name="port_forwards_clean_confirm_body">这将移除全部 %1$d 条转发规则。Podroid 自身的转发（SSH、显示、音频）不受影响。</string>
+    <string name="port_forwards_clean_confirm_btn">全部移除</string>
+    <string name="none">无</string>
+    <string name="active">活动</string>
+    <string name="off">关闭</string>
+    <string name="on">开启</string>
+
+    <!-- Status monitor -->
+    <string name="status_page_title">状态监控</string>
+    <string name="status_phone_section">手机</string>
+    <string name="status_vm_section">虚拟机</string>
+    <string name="status_load_average">平均负载（1 / 5 / 15 分钟）</string>
+    <string name="status_vm_ram_allocated">虚拟机内存（已分配）</string>
+    <string name="status_emulator_rss">模拟器占用 %1$s</string>
+    <string name="status_vm_disk">虚拟机磁盘镜像</string>
+    <string name="status_error">错误</string>
+    <string name="status_refresh_hint">此页面打开时每 2 秒自动刷新。</string>
+    <string name="status_vm_load_graph_title">虚拟机 CPU 负载</string>
+    <string name="status_vm_load_current">当前：%1$d%%</string>
+    <string name="status_vm_load_collecting">正在采集数据…</string>
+    <string name="status_vm_load_waiting">启动虚拟机后显示负载</string>
+    <string name="status_vm_load_stopped">虚拟机未运行</string>
+    <string name="status_vm_load_avf_only">负载图表仅在 QEMU 后端且虚拟机运行时可用</string>
+    <string name="status_vm_load_graph_hint">根据手机上模拟器进程的 CPU 占用计算，并按虚拟机分配的核心数归一化。</string>
+    <string name="status_vm_load_axis" formatted="false">最近约 2 分钟 · 0%（空闲）→ 100%（全部核心繁忙）</string>
+
+    <!-- Container backup -->
+    <string name="container_backup_title">容器备份</string>
+    <string name="container_backup_settings_subtitle">导出容器与镜像</string>
+    <string name="container_backup_description">把虚拟机里的容器和镜像存成 tar 归档，直接落到手机的下载目录。填好名称点按钮即可，进度会显示在终端页。</string>
+    <string name="container_backup_location">备份位置</string>
+    <string name="container_backup_guest_path">虚拟机路径</string>
+    <string name="container_backup_phone_path">手机（下载目录）</string>
+    <string name="container_backup_phone_path_value">/sdcard/Download/Qodroid/backups</string>
+    <string name="container_backup_downloads_hint">在设置中启用下载目录共享，备份文件会出现在手机上。</string>
+    <string name="container_backup_export">导出容器</string>
+    <string name="container_backup_export_hint">把容器当前的完整文件系统打包成一个 tar。只有文件系统内容，不含镜像层与配置，换台机器要重新配端口、卷、环境变量。备份后在下方「手机上的备份」里点「恢复镜像」即可导入。</string>
+    <string name="container_backup_vm_stopped">运行备份命令前请先启动虚拟机。</string>
+    <string name="container_backup_container_name">容器名称</string>
+    <string name="container_backup_run_export">导出容器</string>
+    <string name="container_backup_run_all">一键备份全部容器</string>
+    <string name="container_backup_all_hint">不用填名称，直接导出虚拟机里现有的全部容器。还没有容器时不会产生文件。</string>
+    <string name="container_backup_copy_export">复制导出命令</string>
+    <string name="container_backup_save_image">保存镜像</string>
+    <string name="container_backup_save_image_hint">把镜像连同所有层和元数据存成 tar。恢复后与镜像一致，能直接跑出同样的容器，推荐用这种方式备份。体积通常比导出容器大几倍。输入框填「仓库:标签」，例如 docker.io/library/nginx:latest；点上方镜像列表可直接填入，不用手打。</string>
+    <string name="container_backup_mirror">镜像源</string>
+    <string name="container_backup_mirror_none">未设置 — 直接连接</string>
+    <string name="container_backup_mirror_using">当前使用：%1$s</string>
+    <string name="container_backup_mirror_hint">拉取 Docker Hub 镜像时使用镜像加速源。仅对 docker.io 的镜像生效；填好镜像引用后「保存镜像」会先经镜像源拉取再打包。</string>
+    <string name="container_backup_mirror_direct">直接连接 Docker Hub</string>
+    <string name="container_backup_mirror_daocloud">DaoCloud 加速 (docker.m.daocloud.io)</string>
+    <string name="container_backup_mirror_ustc">中科大 (docker.mirrors.ustc.edu.cn)</string>
+    <string name="container_backup_mirror_tencent">腾讯云 (mirror.cc.tencentyun.com)</string>
+    <string name="container_backup_mirror_netease">网易 (hub-mirror.c.163.com)</string>
+    <string name="container_backup_mirror_custom">自定义</string>
+    <string name="container_backup_mirror_custom_placeholder">如 docker.m.daocloud.io</string>
+    <string name="container_backup_image_ref">镜像引用（仓库:标签）</string>
+    <string name="container_backup_image_placeholder">docker.io/library/nginx:latest</string>
+    <string name="container_backup_run_save">保存镜像</string>
+    <string name="container_backup_copy_save">复制保存命令</string>
+    <string name="container_backup_fallback">备用：复制命令</string>
+    <string name="container_backup_fallback_hint">上面的备份会自动执行。以下按钮只在你想先看看命令，或拿到别的 shell 里粘贴时才需要。</string>
+    <string name="container_backup_scan_title">虚拟机内容</string>
+    <string name="container_backup_scan_hint">不用手打名称。先读出虚拟机里已有的容器和镜像，点一下就会填进下方对应的输入框。</string>
+    <string name="container_backup_scan">读取容器和镜像</string>
+    <string name="container_backup_scan_working">正在读取…</string>
+    <string name="container_backup_scan_empty">虚拟机里还没有容器或镜像。先在虚拟机里创建容器（例如 nginx），再回来点「读取容器和镜像」。</string>
+    <string name="container_backup_scan_containers">容器</string>
+    <string name="container_backup_scan_images">镜像</string>
+    <string name="container_backup_engine">引擎：%1$s（虚拟机里检测到的，已连接）</string>
+    <string name="container_backup_scan_no_containers">镜像在，但没有容器。镜像只是素材，导出容器和备份全部容器都只处理容器，所以列表里没有可点的项。先在虚拟机里跑一个（例如 nginx），再点「读取容器和镜像」。</string>
+    <string name="container_backup_invalid_name">容器名必须以字母或数字开头，只能包含字母、数字、`_`、`.`、`-`。</string>
+    <string name="container_backup_err_scan_timeout">读取容器列表超时。</string>
+    <string name="container_backup_err_failed">备份失败：%1$s</string>
+    <string name="container_backup_err_no_engine">虚拟机里没有容器命令，podman 和 docker 都不存在。请先在虚拟机里装一个容器引擎（例如用 apk 或 apt 安装 docker），装好再回来备份。</string>
+    <string name="container_backup_err_container_missing">导出失败：虚拟机里没有名为 %1$s 的容器。请先在终端里创建容器，或检查名称是否拼写正确。</string>
+    <string name="container_backup_err_image_missing">保存失败：虚拟机里没有名为 %1$s 的镜像。请先在终端里拉取镜像，或检查镜像引用。</string>
+    <string name="container_backup_err_exit">备份命令以状态码 %1$d 退出，没有产出归档。</string>
+    <string name="container_backup_err_no_output">备份命令没有返回结果，无法确认是否成功。请到终端页查看。</string>
+    <string name="container_backup_copy_list">复制列表命令</string>
+    <string name="container_backup_copy_all">复制全部备份命令</string>
+    <string name="container_backup_terminal_hint">粘贴到 Podroid 终端执行。较新的镜像包含 podroid-backup；旧镜像会自动回退到 podman export。</string>
+    <string name="container_backup_on_phone">手机上的备份</string>
+    <string name="container_backup_refresh">刷新列表</string>
+    <string name="container_backup_none">/sdcard/Download/Qodroid/backups 中尚未找到备份归档。</string>
+    <string name="container_backup_restore_image">恢复镜像</string>
+    <string name="container_backup_restore_confirm_title">恢复镜像 %1$s？</string>
+    <string name="container_backup_restore_confirm_body">用 podman load 把这个归档导入虚拟机；如果是容器导出归档（没有镜像清单），会自动改用 podman import。导入后能在 podman images 里看到，也能从中运行新容器。</string>
+    <string name="container_backup_restore_working">正在恢复…</string>
+    <string name="container_backup_restore_ok">镜像已恢复：%1$s</string>
+    <string name="container_backup_restore_failed">恢复失败：%1$s</string>
+    <string name="container_backup_list_error">无法读取备份文件夹，请点击刷新重试。</string>
+    <string name="container_backup_use_expl_title">备份怎么用</string>
+    <string name="container_backup_use_expl_1">备份文件都落在 /sdcard/Download/Qodroid/backups/，也就是本页下方那个列表。</string>
+    <string name="container_backup_use_expl_2">导出容器 = 只有文件系统内容。点列表里的「恢复镜像」导入；换台机器要重新配端口、卷、环境变量。</string>
+    <string name="container_backup_use_expl_3">保存镜像 = 镜像连同所有层与元数据。恢复后与镜像一致，能直接跑出同样的容器，推荐用这种方式。</string>
+    <string name="container_backup_copied">命令已复制</string>
+    <string name="container_backup_working">正在备份，进度可在终端页查看…</string>
+    <string name="container_backup_done">备份完成：%1$s</string>
+    <string name="container_backup_none_all">没有可备份的容器，没有导出任何文件。</string>
+    <string name="container_backup_err_no_session">没有运行中的 Linux 会话。请先启动虚拟机并打开终端页。</string>
+    <string name="container_backup_err_login">无法登录 guest 的 shell。</string>
+    <string name="container_backup_err_timeout">备份超时。虚拟机里的归档可能仍未写完，请到终端页确认。</string>
+
+    <!-- Home -->
+    <string name="home_containers_created">已创建容器</string>
+    <string name="home_containers_count">%1$d</string>
+    <string name="home_containers_unknown">—</string>
+    <string name="home_action_backup">备份</string>
+    <string name="home_action_status">状态</string>
+
+    <string name="up">运行中</string>
+    <string name="uptime_hours_minutes">%1$d小时%2$d分钟</string>
+    <string name="uptime_minutes_seconds">%1$d分%2$d秒</string>
+    <string name="uptime_seconds">%1$d秒</string>
+
+    <!-- AVF Hint -->
+    <string name="avf_available">此设备支持 AVF (KVM)</string>
+    <string name="avf_hint_needs_pc">需要 PC 上的 adb，或设备上的 Shizuku 应用进行授权。运行一次：</string>
+    <string name="avf_grant_commands">adb shell pm grant com.pxkf.qodroid \\\n  android.permission.MANAGE_VIRTUAL_MACHINE\nadb shell pm grant com.pxkf.qodroid \\\n  android.permission.USE_CUSTOM_VIRTUAL_MACHINE</string>
+
+    <!-- Backend fallback (#66): AVF was forced but this device can't run it -->
+    <string name="backend_fallback_suffix">（AVF 不可用，正在使用 QEMU）</string>
+    <string name="backend_avf_unavailable">此设备无法使用 AVF：%1$s</string>
+    <string name="backend_fallback_banner">已选择 AVF，但此设备不可用。虚拟机正在使用 QEMU（软件模拟）运行。</string>
+    <string name="backend_fallback_reason_feature">虚拟化框架功能不受支持</string>
+    <string name="backend_fallback_reason_permissions">所需权限尚未授予</string>
+    <string name="backend_fallback_reason_service">系统服务不可达</string>
+    <string name="backend_fallback_reason_protected_only">此设备仅支持受保护虚拟机</string>
+
+    <!-- Permissions -->
+    <string name="permissions">权限</string>
+    <string name="permissions_description">Podroid 需要以下权限才能稳定运行虚拟机。</string>
+    <string name="permissions_needed">需要授权</string>
+    <string name="perm_notifications_title">通知</string>
+    <string name="perm_notifications_why">显示虚拟机状态，并可从通知栏停止虚拟机。</string>
+    <string name="perm_battery_title">后台不受限制</string>
+    <string name="perm_battery_why">让虚拟机在应用退到后台时继续运行。</string>
+    <string name="perm_grant">授权</string>
+    <string name="perm_granted">已授权</string>
+
+    <!-- Setup Steps -->
+    <string name="step_1_of_5">第 1 步，共 5 步</string>
+    <string name="step_2_of_5">第 2 步，共 5 步</string>
+    <string name="step_3_of_5">第 3 步，共 5 步</string>
+    <string name="step_4_of_5">第 4 步，共 5 步</string>
+    <string name="step_5_of_5">第 5 步，共 5 步</string>
+
+    <!-- Dialogs -->
+    <string name="update_available">有新版本可用</string>
+    <string name="version_available">版本 %1$s 可用。当前版本 %2$s。</string>
+    <string name="update_open_failed">无法打开下载页面。没有可用的浏览器？</string>
+
+    <!-- Language -->
+    <string name="language_label">语言</string>
+    <string name="system_default">系统默认</string>
+    <string name="language_zh">中文 (Chinese)</string>
+    <string name="language_en">English</string>
+
+    <!-- Error -->
+    <string name="error_title">错误</string>
+    <string name="try_again">重试</string>
+
+    <!-- Sharing -->
+    <string name="sharing">共享</string>
+
+    <!-- Terminal -->
+    <string name="paste_text">粘贴</string>
+    <string name="copy_text">复制</string>
+    <string name="text_selection_more">更多…</string>
+    <string name="terminal_title">终端</string>
+    <string name="vm_not_running_hint">请先从主屏幕启动虚拟机。</string>
+    <string name="back_to_home">返回主屏幕</string>
+    <string name="terminal_disconnected_tap_retry">已断开连接。点按以重新连接。</string>
+
+    <!-- Terminal Quick Settings -->
+    <string name="display_section">显示</string>
+    <string name="size_label">大小</string>
+    <string name="theme_with_value">主题 · %1$s</string>
+    <string name="font_with_value">字体 · %1$s</string>
+    <string name="input_section">输入</string>
+    <string name="extra_keys">扩展按键</string>
+    <string name="haptics">触觉反馈</string>
+    <string name="color_themes">颜色主题</string>
+    <string name="fonts">字体</string>
+    <string name="import_label">导入</string>
+    <string name="paste_url">粘贴 URL</string>
+    <string name="add_btn">+ 添加</string>
+    <string name="remove_font_question">删除字体？</string>
+    <string name="remove_theme_question">删除主题？</string>
+    <string name="item_will_be_deleted">"%1$s" 将被删除。</string>
+    <string name="delete_label">删除</string>
+    <string name="search_n_items">搜索 %1$d 项</string>
+    <string name="import_theme">导入主题</string>
+    <string name="import_theme_hint">粘贴 terminalcolors.com 主题 URL。</string>
+    <string name="import_theme_error">导入失败 — 请检查 URL。</string>
+    <string name="importing">导入中…</string>
+
+    <!-- X11 -->
+    <string name="x11_title">X11</string>
+    <string name="x11_open">打开 X11 桌面</string>
+    <string name="x11_connecting">正在连接 X11 服务器...</string>
+    <string name="x11_not_ready">X11 服务器未就绪 — 虚拟机是否仍在启动？</string>
+    <string name="fullscreen">全屏</string>
+    <string name="keyboard">键盘</string>
+    <string name="terminal">终端</string>
+    <string name="resolution">分辨率</string>
+    <string name="match_viewport">匹配视口</string>
+    <string name="preset">预设</string>
+    <string name="custom_resolution">自定义</string>
+    <string name="res_720p">720p</string>
+    <string name="res_900p">900p</string>
+    <string name="res_1080p">1080p</string>
+    <string name="res_1440p">1440p</string>
+    <string name="x11_render_scale">渲染比例</string>
+    <string name="x11_render_scale_hint">数值越低越流畅，桌面会放大以适应屏幕。</string>
+    <string name="rotation">旋转</string>
+    <string name="auto_rotation">自动</string>
+    <string name="landscape">横屏</string>
+    <string name="portrait">竖屏</string>
+    <string name="touch">触摸</string>
+    <string name="direct_touch">直接触摸</string>
+    <string name="trackpad">触摸板</string>
+    <string name="pointer_speed">指针速度</string>
+    <string name="pointer_acceleration">指针加速度</string>
+    <string name="display">显示</string>
+    <string name="show_extra_keys">显示扩展按键</string>
+    <string name="start_fullscreen">默认全屏启动</string>
+    <string name="server_dpi">服务器 DPI</string>
+    <string name="applies_on_next_vm_start">将在下次虚拟机启动时生效</string>
+    <string name="width">宽度</string>
+    <string name="height">高度</string>
+
+    <!-- Misc -->
+    <string name="add">添加</string>
+    <string name="version_label">版本</string>
+    <string name="stop_vm_before_edit">停止虚拟机后才能编辑 — 更改将在下次启动时生效。</string>
+
+    <!-- USB Passthrough -->
+    <string name="usb_passthrough">USB 设备直通</string>
+    <string name="usb_passthrough_description">可选。在虚拟机运行时热插拔外部 USB 设备（Wi-Fi、存储、串口等）。</string>
+    <string name="enable_usb_passthrough">启用 USB 设备直通</string>
+    <string name="usb_devices_section">设备</string>
+    <string name="usb_passthrough_available">插入设备时会询问您的许可。为虚拟机添加 USB 控制器，会带来少量模拟开销，如果不需要可保持关闭。您可在设置中随时更改。</string>
+    <string name="usb_passthrough_unavailable">此后端不可用：USB 设备直通需要 QEMU 控制套接字，而 AVF 后端不提供此功能。您可在设置中随时更改。</string>
+    <string name="usb_passthrough_settings_label">USB 设备直通</string>
+    <string name="usb_passthrough_settings_description_available">在虚拟机中热插拔外部 USB 设备（Wi-Fi、存储、串口等）。设备连接时会询问许可。启动时添加 USB 控制器，因此需要重启虚拟机以应用更改。</string>
+    <string name="usb_passthrough_settings_description_unavailable">%1$s 后端不可用：USB 设备直通需要 QEMU 的 QMP 控制套接字，而 AVF 后端不提供此功能。</string>
+    <string name="server_mode">服务器模式</string>
+    <string name="server_mode_desc">在屏幕变黑的情况下保持虚拟机运行以省电。应用会保持在前台，因此虚拟机不会被停止。要退出，请在任意位置长按 3 秒。</string>
+    <string name="server_mode_enable">启用服务器模式</string>
+    <string name="server_mode_exit_hint">长按 3 秒退出</string>
+
+    <!-- AVF Boot Failure -->
+    <string name="avf_boot_failed_try_one_core">AVF 在此设备上启动失败。请尝试将 CPU 核心数设置为 1，或将后端切换至 QEMU。</string>
+    <string name="avf_boot_failed_switch_qemu">AVF 在此设备上无法启动。请将后端切换至 QEMU。</string>
+    <string name="avf_action_use_one_core">使用 1 个核心</string>
+    <string name="avf_action_switch_qemu">切换至 QEMU</string>
+    <string name="avf_action_retry">重试</string>
+    <string name="avf_net_workaround_failed">此设备上 AVF 联网所需的兼容性设置失败，Linux 系统启动后可能没有网络连接。如果网络不可用，请将后端切换至 QEMU。</string>
+
+    <!-- 首页五页容器 -->
+    <string name="pager_tab_home">主控</string>
+    <string name="pager_tab_terminal">终端</string>
+    <string name="pager_tab_files">文件</string>
+    <string name="pager_tab_about">关于</string>
+
+    <!-- 脚本库页 -->
+
+    <!-- 文件管理页 -->
+    <string name="file_manager_title">文件</string>
+    <string name="files_tab_files">文件</string>
+    <string name="files_tab_mounts">挂载</string>
+    <string name="up_one_level">上一级</string>
+    <string name="storage_access_needed">浏览下载目录需要存储权限。</string>
+    <string name="empty_folder">此文件夹为空。</string>
+    <string name="folder_hint_long_press">长按可 cd 到此文件夹</string>
+    <string name="cd_into_folder">cd 到此文件夹</string>
+    <string name="cd_into_folder_confirm">在终端中执行 \'cd %1$s\'？</string>
+    <string name="action_cd">cd</string>
+    <string name="mounts_downloads_title">下载目录共享</string>
+    <string name="mounts_host_path">本机路径</string>
+    <string name="mounts_guest_path">虚拟机内路径</string>
+    <string name="mounts_state_mounted">已挂载</string>
+    <string name="mounts_state_not_mounted">未挂载</string>
+    <string name="mounts_state_not_enabled">未启用</string>
+    <string name="mounts_state_checking">检测中…</string>
+    <string name="mounts_state_no_session">虚拟机未运行</string>
+    <string name="mounts_open">打开</string>
+    <string name="mounts_go_to_settings">打开设置</string>
+    <string name="mounts_not_enabled_hint">共享默认是关闭的。请先停止虚拟机，在 设置 → 存储 → 下载文件夹共享 中打开开关并授予「所有文件访问」权限，再重新启动虚拟机。</string>
+    <string name="mounts_not_mounted_hint">共享目录还没有出现。若一直为空，可能是存储访问未开启。</string>
+    <string name="mounts_no_session_hint">先启动 Linux 虚拟机再检查挂载。</string>
+    <string name="mounts_shared_contents">共享内容</string>
+    <string name="mounts_host_loading">正在读取下载目录…</string>
+    <string name="mounts_host_unreadable">无法读取此目录。可能是存储访问未开启。</string>
+    <string name="mounts_refresh">刷新</string>
+    <string name="mounts_folder">文件夹</string>
+    <string name="mounts_delete">删除</string>
+    <string name="mounts_delete_confirm_title">删除 %1$s？</string>
+    <string name="mounts_delete_failed">无法删除 %1$s</string>
+
+    <!-- 关于页 -->
+    <string name="about_title">关于</string>
+    <string name="about_version">版本 %1$s</string>
+    <string name="about_visit_website">访问官网</string>
+    <string name="about_check_updates">检查更新</string>
+    <string name="about_view_logs">查看日志</string>
+    <string name="log_viewer_title">日志</string>
+    <string name="log_viewer_refresh">刷新</string>
+    <string name="log_viewer_copy">复制日志</string>
+    <string name="log_viewer_copied">日志已复制到剪贴板</string>
+    <string name="log_viewer_loading">正在加载日志…</string>
+    <string name="log_viewer_empty">暂无日志内容。</string>
+    <string name="about_features_title">功能特性</string>
+    <string name="about_feature_vm">真实 Linux 与 Windows 虚拟机（QEMU aarch64/x86_64、AVF）</string>
+    <string name="about_feature_terminal">内置终端，122 款主题 &amp; 13 种字体</string>
+    <string name="about_feature_x11">X11 桌面查看器，运行图形应用</string>
+    <string name="about_feature_containers">Podman、Docker &amp; LXC 容器</string>
+    <string name="about_website_url">https://qodroid.fkuu.top/</string>
+
+    <!-- 双终端：Windows ARM / 自定义镜像页 -->
+    <string name="boot_mode">启动模式</string>
+    <string name="boot_mode_hint">选择虚拟机启动内容，并决定终端页面显示的内容。</string>
+    <string name="dual_terminal_linux">Linux</string>
+    <string name="dual_terminal_windows">Windows</string>
+    <string name="boot_mode_windows_empty">尚未选择镜像 — 点击下方的选择磁盘镜像按钮选取文件。</string>
+    <string name="boot_mode_windows_hint">模拟 x86_64：比 Linux 慢很多，且需要 4 GB 虚拟机内存。</string>
+    <string name="windows_image_title">Windows / 自定义镜像</string>
+    <string name="windows_image_none">未选择镜像</string>
+    <string name="windows_image_hint">浏览 Downloads 选择 qcow2/img/raw/iso 镜像。点击文件即选中，VM 将通过 UEFI 从镜像启动。</string>
+    <string name="windows_start_vm">启动虚拟机</string>
+    <string name="windows_stop_vm">停止虚拟机</string>
+    <!-- 本地化补齐：新增字符串的中文翻译 -->
+    <string name="files_guest_checking">正在检查 Linux…</string>
+    <string name="files_guest_loading">正在读取 Linux 文件系统…</string>
+    <string name="files_guest_tap_to_load">点击此处读取 Linux 文件系统。</string>
+    <string name="files_guest_unsupported">此模式不可用。Linux 文件系统靠向 Linux shell 发送命令读取，而 Windows 模式没有 shell — 请改用 X11 预览查看。</string>
+    <string name="guest_files_unreachable">无法读取 Linux 文件系统。虚拟机是否在运行？终端是否已连接？</string>
+    <string name="pager_tab_settings">设置</string>
+    <string name="quick_settings">终端快速设置</string>
+    <string name="vnc_applies_after_restart">下次启动虚拟机时生效</string>
+    <string name="vnc_endpoint">VNC 端口 %1$d</string>
+    <string name="vnc_hint">Windows 虚拟机没有自己的 X 服务，这是查看画面的唯一方式。</string>
+    <string name="vnc_hint_off">VNC 已关闭，虚拟机画面在任何地方都无法查看 — 预览会一直黑屏。打开它才能观看启动过程。</string>
+    <string name="windows_x11_preview_hint">Windows 画面通过应用内 X11 预览显示 —— 这是观看图形虚拟机的唯一方式。</string>
+    <string name="windows_x11_preview_open">打开 X11 预览</string>
+    <string name="vnc_hint_on">应用内的 X11 预览连接的就是这个端口。Windows 虚拟机没有自己的 X 服务，这是查看画面的唯一方式。</string>
+    <string name="vnc_short_failed">无法连接</string>
+    <string name="vnc_short_listening">运行中</string>
+    <string name="vnc_short_waiting">启动中</string>
+    <string name="vnc_status_failed">无法连接</string>
+    <string name="vnc_status_listening">正在监听 127.0.0.1:%1$d</string>
+    <string name="vnc_status_off">已关闭</string>
+    <string name="vnc_status_waiting">等待服务器…</string>
+    <string name="vnc_title">VNC 画面</string>
+    <string name="vnc_expose_title">暴露到局域网</string>
+    <string name="vnc_expose_loopback">仅本机（127.0.0.1）</string>
+    <string name="vnc_expose_lan">同网络任意设备</string>
+    <string name="vnc_expose_hint">关闭时 VNC 只监听本机，仅供应用内查看器使用。开启后监听 0.0.0.0，同一 Wi-Fi 下的其它设备可用本机 IP 加端口，从桌面 VNC 客户端连接。</string>
+    <string name="windows_console_empty">暂无控制台输出。Windows 虚拟机在安装程序或桌面接管画面时不往这里写东西；固件和引导程序的消息会一直出现，直到切换到图形界面。</string>
+    <string name="windows_console_empty_bios">这里本来就没有内容 — SeaBIOS 输出到 VGA 屏幕，不走串口。打开 X11 预览即可观看启动过程。</string>
+    <string name="windows_console_title">虚拟机控制台</string>
+    <string name="windows_image_picker_action">选择磁盘镜像</string>
+    <string name="windows_image_picker_confirm">使用 %1$s</string>
+    <string name="windows_image_picker_confirm_disabled">请先选择镜像</string>
+    <string name="windows_image_picker_hint">点击文件夹进入，点击镜像选中。</string>
+    <string name="windows_image_picker_title">选择磁盘镜像</string>
+    <string name="windows_screen_title">虚拟机画面</string>
+    <string name="windows_uefi_bios">BIOS（SeaBIOS）</string>
+    <string name="windows_uefi_hint">默认使用 UEFI。仅当磁盘安装时没有 EFI 系统分区才切换到 BIOS，否则虚拟机会掉进 UEFI Shell。</string>
+    <string name="windows_uefi_ovmf">UEFI（OVMF）</string>
+    <string name="windows_uefi_title">固件</string>
+    <!-- Versions (About page) -->
+    <string name="about_versions">版本</string>
+    <string name="about_qemu_aarch64">QEMU（aarch64 虚拟机）</string>
+    <string name="about_qemu_x86_64">QEMU（x86_64 虚拟机）</string>
+    <string name="about_qemu_absent">此构建未包含</string>
+    <string name="about_distro_value">Alpine 3.24</string>
+    <string name="about_versions_hint">两个模拟器来自同一个 QEMU 版本。x86_64 那个用于运行 Windows 虚拟机，需要大得多的内存分配。</string>
+    <string name="about_changelog_title">更新日志</string>
+    <string name="about_docs_title">使用文档</string>
+    <string name="docs_title">使用文档</string>
+    <string name="docs_start_title">启动虚拟机</string>
+    <string name="docs_start_desc">在首页点击启动；首次启动较慢。虚拟机运行后，终端按钮可进入虚拟机内的 root Shell。</string>
+    <string name="docs_start_code"># 从手机 SSH 进入虚拟机\nssh root@localhost -p 9922</string>
+    <string name="docs_create_title">创建容器</string>
+    <string name="docs_create_desc">容器在虚拟机内部用已有的引擎创建。下面这条命令会启动一个 Nginx 网站，并在后台持续运行。</string>
+    <string name="docs_create_code">docker run -d --name myapp -p 8080:80 nginx</string>
+    <string name="docs_ports_title">从手机访问</string>
+    <string name="docs_ports_desc">用 -p 发布过的端口可以从手机的 localhost 访问。以上例中，8080 是手机上要打开的端口，80 是容器内部的端口。</string>
+    <string name="docs_ports_code"># 在手机上用浏览器打开\nhttp://localhost:8080</string>
+    <string name="docs_backup_title">备份与恢复</string>
+    <string name="docs_backup_desc">备份是写入共享文件夹的普通 tar 压缩包。也可以在容器备份页面创建和恢复。</string>
+    <string name="docs_backup_code"># 备份存放位置\n/storage/emulated/0/Download/Qodroid/backups/</string>
+    <string name="docs_faq_title">常见问题</string>
+    <string name="docs_faq_desc">容易踩坑的地方，以及该怎么办。</string>
+    <string name="docs_faq_no_backup">备份里没有任何容器 —— 已停止的容器需要先导出才会被归档，先确认它正在运行。虚拟机内的 docker ps 可以看到当前有哪些容器。</string>
+    <string name="docs_faq_no_containers">扫描不到容器 —— 可能容器在另一个引擎里，或者已经被删除。在终端里运行 docker ps 或 podman ps 查看虚拟机里实际有什么。</string>
+    <string name="docs_faq_pull_fail">镜像拉不下来 —— 通常是虚拟机没有网络出口，或者仓库被屏蔽。先确认虚拟机能上网，必要时换一个镜像源。</string>
+    <string name="docs_faq_share">移动或分享备份 —— 压缩包就是共享文件夹里的普通 tar 文件，可以像其它文件一样复制、同步。恢复也从同一个文件夹读取。</string>
+    <string name="docs_faq_dns">Windows 虚拟机无法上网。DHCP 会分配 QEMU 内置 NAT 的地址（10.0.2.x），但它给出的 DNS 是一个经手机转发的代理，不稳定。请在 Windows 网卡设置里把 DNS 直接改成 223.5.5.5 和 8.8.8.8，网页就能打开了。ping 无论如何都不通 —— NAT 不转发 ICMP。</string>
+    <string name="about_opensource_title">开源与许可证</string>
+    <string name="about_opensource_body">本应用是基于 Podroid 修改的版本。Podroid 及其衍生版本均以 GNU GPL v2 发布，本应用同样如此；获取完整源代码、修改并再分发都是被允许的。</string>
+    <string name="about_opensource_upstream">上游项目</string>
+    <string name="about_opensource_upstream_value">Podroid</string>
+    <string name="about_opensource_repository">上游仓库</string>
+    <string name="about_opensource_repository_value">ExTV/Podroid</string>
+    <string name="about_opensource_repository_url">https://github.com/ExTV/Podroid</string>
+    <string name="about_opensource_license">许可证</string>
+    <string name="about_opensource_license_value">GNU GPL v2</string>
+    <string name="about_opensource_copyright">原始版权声明</string>
+    <string name="about_opensource_copyright_value">2024-2026 Podroid contributors</string>
+    <string name="about_opensource_view_license">查看完整许可证</string>
+    <string name="about_opensource_license_title">GNU GENERAL PUBLIC LICENSE v2</string>
+    <string name="about_opensource_license_close">关闭</string>
+    <string name="about_opensource_license_unavailable">无法读取内置的许可证文本。</string>
+    <string name="changelog_200_title">v2.0.0</string>
+    <string name="changelog_200_3">恢复归档时 load 失败自动改用 import，容器导出与保存镜像两种归档都能导入。</string>
+    <string name="changelog_200_4">导出前检查容器是否存在，名称错误直接提示，不再跑到一半才失败。</string>
+    <string name="changelog_200_5">备份页新增「备份怎么用」说明；镜像源改为下拉菜单并显示当前生效值。</string>
+    <string name="changelog_200_7">终端快捷键栏新增 DEL、SHIFT，均支持粘滞修饰键。</string>
+    <string name="changelog_200_8">修复整机备份因长时间无输出被误判超时的假失败。</string>
+    <string name="changelog_200_12">容器备份支持 docker：有 podman 就用 podman，只有 docker 时自动改用 docker，容器列表、导出、保存镜像、恢复全都通用。</string>
+    <string name="changelog_200_13">两个容器命令都没有时给出明确提示，不再只报一句命令失败；提示改为通用说法，并说明先装一个引擎再回来备份。</string>
+    <string name="changelog_200_15">修正启动模式选 Windows 时的提示：应点击下方的选择磁盘镜像按钮选取文件。</string>
+    <string name="changelog_200_16">备份页显示的下载目录改为完整路径。</string>
+    <string name="changelog_200_17">更新日志移到单独页面，关于页只留一个按钮进入。</string>
+    <!-- AVF diagnostics (Settings → Advanced → Backend) -->
+    <string name="avf_diagnostics">AVF 诊断</string>
+    <string name="guest_files_no_session">没有终端会话。先打开一次终端页让 Podroid 连上虚拟机控制台，然后再试。</string>
+    <string name="guest_files_login_failed">虚拟机 shell 没有进入登录提示。请到终端页看看 —— 如果停在「podroid login:」，输入 root 再输入 podroid。</string>
+    <string name="guest_files_timeout">Linux shell 收到了命令但没有及时输出，可能正忙。再试一次。</string>
+    <string name="guest_files_unparseable">无法解析该目录列表。\n原始输出：\n%1$s</string>
+    <string name="export_to_downloads">导出到 Download/Qodroid</string>
+    <string name="files_copy_path">复制路径</string>
+    <string name="files_path_copied">路径已复制</string>
+    <string name="export_dir_hint">导出会把这个文件夹连同内容复制到手机「下载」目录下的 Qodroid/ 里。需要开启下载文件夹共享（设置 → 存储 → 下载文件夹共享）。</string>
+    <string name="export_file_hint">导出会把这个文件复制到手机「下载」目录下的 Qodroid/ 里。需要开启下载文件夹共享（设置 → 存储 → 下载文件夹共享）。</string>
+    <string name="export_working">正在导出…</string>
+    <string name="export_result_title">导出</string>
+    <string name="export_ok">已导出到 Download/Qodroid/%1$s</string>
+    <string name="export_not_shared">下载文件夹共享没有挂载，没有可导出的目标。请先停止虚拟机，在 设置 → 存储 → 下载文件夹共享 中开启，再重新启动。</string>
+    <string name="export_no_session">没有终端会话，无法让 Linux 复制文件。请先打开一次终端页，然后再试。</string>
+    <string name="export_failed">无法把 %1$s 从虚拟机复制出来。</string>
+</resources>

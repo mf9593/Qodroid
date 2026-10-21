@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Podroid - Rootless Podman for Android
+  Copyright (C) 2024-2026 Podroid contributors
+-->
+<resources>
+    <string name="app_name">Qodroid</string>
+
+    <!-- VM Status -->
+    <string name="vm_status">VM Status</string>
+    <string name="status_starting">Starting</string>
+    <string name="status_running">Running</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_idle">Idle</string>
+    <string name="status_stopping">Shutting down…</string>
+    <string name="stopping_vm">Stopping the VM…</string>
+    <string name="stopping_action">Stopping…</string>
+
+    <!-- Network -->
+    <string name="network">Network</string>
+    <string name="phone_ip">Phone IP</string>
+    <string name="phone_ip_also">Also on %1$s</string>
+    <string name="ssh">SSH</string>
+    <string name="port_forwards">Port forwards</string>
+
+    <!-- VNC -->
+    <string name="vnc_title">VNC screen</string>
+    <string name="vnc_hint">QEMU\'s built-in VNC server. This is the only way a Windows guest can be seen — it has no X server of its own. Linux guests use the in-guest Xvnc on 5900 instead.</string>
+    <string name="vnc_expose_title">Expose to network</string>
+    <string name="vnc_expose_loopback">This phone only (127.0.0.1)</string>
+    <string name="vnc_expose_lan">Any device on this network</string>
+    <string name="vnc_expose_hint">When off, VNC is loopback-only and reachable from the in-app viewer. When on, it listens on 0.0.0.0 — the same port becomes reachable from any device on the same Wi-Fi, so connect from a desktop VNC client using this phone\'s IP address.</string>
+    <string name="vnc_status_off">Off</string>
+    <string name="vnc_status_waiting">Waiting for the server…</string>
+    <string name="vnc_status_listening">Listening on 127.0.0.1:%1$d</string>
+    <string name="vnc_status_failed">Not reachable</string>
+    <string name="vnc_applies_after_restart">Takes effect on the next VM start</string>
+
+    <!-- Last Session -->
+    <string name="last_session">Last session</string>
+    <string name="booted_in">Booted in</string>
+    <string name="build">Build</string>
+
+    <!-- Actions -->
+    <string name="settings">Settings</string>
+<string name="quick_settings">Terminal quick settings</string>
+
+    <!-- Windows boot options (Home page) -->
+    <string name="windows_image_picker_action">Select disk image</string>
+    <string name="windows_image_picker_title">Select disk image</string>
+    <string name="windows_image_picker_hint">Tap a folder to enter it, tap an image to choose it.</string>
+    <string name="windows_image_picker_confirm">Use %1$s</string>
+    <string name="windows_image_picker_confirm_disabled">Select an image first</string>
+    <string name="windows_uefi_title">Firmware</string>
+    <string name="windows_uefi_ovmf">UEFI (OVMF)</string>
+    <string name="windows_uefi_bios">BIOS (SeaBIOS)</string>
+    <string name="windows_uefi_hint">UEFI is the default. Switch to BIOS only if the disk was installed without an EFI System Partition — otherwise the guest drops to a UEFI Shell.</string>
+    <string name="vnc_endpoint">VNC on port %1$d</string>
+    <string name="vnc_short_listening">up</string>
+    <string name="vnc_short_waiting">starting</string>
+    <string name="vnc_short_failed">unreachable</string>
+    <!--
+      vnc_hint_on: the preview IS QEMU's framebuffer server for a Windows guest,
+      so it goes away with the switch. Saying otherwise here would send people
+      hunting for a separate "enable preview" control that does not exist.
+    -->
+    <string name="vnc_hint_on">The in-app X11 preview connects to this same port. Windows guests have no X server of their own, so this is the only way to see the screen.</string>
+    <string name="vnc_hint_off">VNC is off, so the guest screen is not reachable anywhere — the preview will stay black. Turn it on to watch the boot.</string>
+    <string name="windows_x11_preview_hint">The Windows screen renders through the in-app X11 preview — the only way to see a graphical guest.</string>
+    <string name="windows_x11_preview_open">Open X11 preview</string>
+
+    <!-- Windows pane on the terminal page -->
+    <string name="windows_screen_title">Guest screen</string>
+    <string name="windows_console_title">Guest console</string>
+    <string name="windows_console_empty">No console output yet. A Windows guest writes nothing here while the installer or the desktop has the display; firmware and bootloader messages appear until it switches to graphics.</string>
+    <string name="windows_console_empty_bios">Nothing here by design — SeaBIOS writes to the VGA screen, not the serial port. Open the X11 preview to watch the boot.</string>
+    <string name="open_terminal">Open Terminal</string>
+    <string name="home_auto_login">Log in to Linux on start</string>
+    <string name="home_login_working">Logging in…</string>
+    <string name="home_login_ok">Logged in</string>
+    <string name="home_login_no_session">No running Linux shell yet. Start the VM and open the Terminal tab first.</string>
+    <string name="home_login_failed">Still not logged in after 60 s. Usually the root password was changed with passwd inside Linux; the login prompt may also never have appeared — check the Terminal page.</string>
+    <string name="home_login_default_password">Default login is root / podroid. Run passwd inside Linux to change it — after that this button cannot log in for you.</string>
+    <string name="restart">Restart</string>
+    <string name="stop">Stop</string>
+    <string name="start_vm">Start VM</string>
+    <string name="download">Download</string>
+    <string name="later">Later</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="back">Back</string>
+    <string name="continue_label">Continue</string>
+    <string name="get_started">Get Started</string>
+    <string name="not_now">Not now</string>
+
+    <!-- Storage -->
+    <string name="persistent_storage">Persistent Storage</string>
+    <string name="storage_description">Storage for installed packages, container images, and your files. You can increase it later in Settings, but it cannot be shrunk.</string>
+
+    <!-- VM Config -->
+    <string name="configure_vm">Configure your VM</string>
+    <string name="vm_config_description">Defaults tuned for performance and battery. Change anytime in Settings.</string>
+    <string name="resources">Resources</string>
+    <string name="cpu_cores">CPU cores</string>
+    <string name="cpu_cores_hint">More is not always faster: on the QEMU (TCG) backend 8 cores measured slower than 4. AVF scales normally.</string>
+    <string name="storage_grow_hint">Storage can be increased later but never shrunk. A larger size takes effect on the next VM start.</string>
+    <string name="ram_label">RAM</string>
+    <string name="network_label">Network</string>
+    <string name="ssh_access">SSH access</string>
+    <string name="ssh_password_hint">ssh root@&lt;phone-ip&gt; -p 9922   (password: podroid)</string>
+    <string name="load_balance">Load balance</string>
+    <string name="load_balance_description">Automatically tune CPU, RAM, storage, and bandwidth for this device.</string>
+    <string name="load_balance_storage_hint">Storage size is set automatically. Turn off load balance on the next step to pick manually.</string>
+    <string name="bandwidth_limit">Bandwidth limit</string>
+    <string name="bandwidth_unlimited">Unlimited</string>
+
+    <!-- Storage Access -->
+    <string name="downloads_sharing">Downloads Sharing</string>
+    <string name="storage_access_description">Optional. Mount your Android Downloads folder into the VM over virtio-9p.</string>
+    <string name="enable_downloads_sharing">Enable Downloads sharing</string>
+    <string name="grant_storage_access">Grant storage access</string>
+    <string name="requires_android_11">On this device, sharing needs the storage permission granted below (Android 11+ uses all-files access instead).</string>
+    <string name="storage_access_warning">Warning: on some devices this can crash the VM. Disable it if start fails.</string>
+
+    <!-- Settings Sections -->
+    <string name="appearance">Appearance</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="dynamic_color">Dynamic color (Material You)</string>
+    <string name="vm_resources">VM Resources</string>
+    <string name="stop_vm_to_change">Stop the VM to change these settings.</string>
+    <string name="storage">Storage</string>
+    <string name="autostart_on_boot">Start VM on boot</string>
+    <string name="autostart_on_boot_desc">Boot the VM automatically after the phone starts. Automation apps can also trigger it with the intent actions com.pxkf.qodroid.action.START_VM and STOP_VM.</string>
+    <string name="reset_vm">Reset VM (deletes all data)</string>
+    <string name="reset_vm_description">Full App Reset?</string>
+    <string name="reset_vm_text">This will clear ALL application data, including your VM storage, settings, and port rules. The app will close and return to a freshly-installed state.</string>
+    <string name="reset_everything">Reset Everything</string>
+    <string name="cancel">Cancel</string>
+    <string name="advanced">Advanced</string>
+    <string name="hide_advanced">Hide advanced</string>
+    <string name="show_advanced">Show advanced</string>
+    <string name="backend">Backend</string>
+    <string name="auto">Auto</string>
+    <string name="avf_kvm">AVF (KVM)</string>
+    <string name="qemu_tcg">QEMU (TCG)</string>
+    <string name="extra_qemu_args">Extra QEMU args</string>
+    <string name="extra_kernel_cmdline">Extra kernel cmdline</string>
+    <string name="kernel_cmdline_helper">Appended after console=ttyAMA0 — controls scheduler, mitigations, log level, etc.</string>
+    <string name="qemu_args_helper">-cpu, -accel, -object, -device, -overcommit, etc. Whitespace-separated.</string>
+    <string name="reset_field_confirm_title">Reset %1$s?</string>
+    <string name="reset_field_confirm_body">This clears your customization and restores the default value.</string>
+    <string name="about">About</string>
+    <string name="architecture">Architecture</string>
+    <string name="linux_distro">Linux distro</string>
+    
+    <string name="avf_diagnostic">AVF (pKVM) diagnostic</string>
+    <string name="running_avf_diagnostic">Running AVF diagnostic…</string>
+    <string name="probing_avf">Probing…</string>
+    <string name="unknown_error">unknown error</string>
+    <string name="verbose_avf_logging">Verbose AVF logging</string>
+    <string name="close">Close</string>
+    <string name="add_port_forward">Add port forward</string>
+    <string name="android_port">Android port</string>
+    <string name="vm_port">VM port</string>
+    <string name="e_g_8080">e.g. 8080</string>
+    <string name="e_g_80">e.g. 80</string>
+    <string name="tcp">TCP</string>
+    <string name="udp">UDP</string>
+    <string name="both">Both</string>
+    <string name="enter_valid_ports">Enter valid port numbers (1–65535)</string>
+    <string name="port_already_forwarded">Port %1$d (%2$s) is already forwarded</string>
+    <string name="port_reserved">Port %1$d is reserved for the in-app desktop</string>
+    <string name="port_forward_table_full">Limit of %1$d port forwards reached. Remove one first.</string>
+    <string name="port_forward_partial_add">Port %1$d: %2$s could not be added, the port forward limit was reached.</string>
+    <string name="reset">Reset</string>
+    <string name="remove">Remove</string>
+    <string name="port_forward_purpose_ssh">SSH</string>
+    <string name="port_forward_purpose_ssh_off">SSH (off)</string>
+    <string name="port_forward_purpose_vnc">Desktop, this phone only</string>
+    <string name="port_forward_purpose_audio">Desktop audio, this phone only</string>
+    <string name="port_forwards_count">Port forwards (%1$d)</string>
+    <string name="port_forwards_clean">Clean all</string>
+    <string name="port_forwards_clean_confirm_title">Remove all port forwards?</string>
+    <string name="port_forwards_clean_confirm_body">This removes all %1$d forwarding rules. Podroid\'s own forwards (SSH, display, audio) are not affected.</string>
+    <string name="port_forwards_clean_confirm_btn">Remove all</string>
+    <string name="none">None</string>
+    <string name="active">active</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+
+    <!-- Status monitor -->
+    <string name="status_page_title">Status</string>
+    <string name="status_phone_section">Phone</string>
+    <string name="status_vm_section">Virtual machine</string>
+    <string name="status_load_average">Load average (1 / 5 / 15 min)</string>
+    <string name="status_vm_ram_allocated">VM RAM (allocated)</string>
+    <string name="status_emulator_rss">Emulator using %1$s</string>
+    <string name="status_vm_disk">VM disk image</string>
+    <string name="status_error">Error</string>
+    <string name="status_refresh_hint">Refreshes every 2 seconds while this screen is open.</string>
+    <string name="status_vm_load_graph_title">VM CPU load</string>
+    <string name="status_vm_load_current">Current: %1$d%%</string>
+    <string name="status_vm_load_collecting">Collecting samples…</string>
+    <string name="status_vm_load_waiting">Start the VM to see load</string>
+    <string name="status_vm_load_stopped">VM is not running</string>
+    <string name="status_vm_load_avf_only">Load graph is available on the QEMU backend while the VM is running</string>
+    <string name="status_vm_load_graph_hint">Tracks the emulator process CPU use on your phone, normalized to the VM\'s allocated cores.</string>
+    <string name="status_vm_load_axis" formatted="false">Last ~2 min · 0% (idle) → 100% (all VM cores busy)</string>
+
+    <!-- Container backup -->
+    <string name="container_backup_title">Container backup</string>
+    <string name="container_backup_settings_subtitle">Export containers &amp; images</string>
+    <string name="container_backup_description">Archive containers and images from the VM into tar files that land in the phone\'s Downloads.</string>
+    <string name="container_backup_location">Backup location</string>
+    <string name="container_backup_guest_path">Guest path</string>
+    <string name="container_backup_phone_path">On phone (Downloads)</string>
+    <string name="container_backup_phone_path_value">/sdcard/Download/Qodroid/backups</string>
+    <string name="container_backup_downloads_hint">Enable Downloads sharing in Settings so backups appear on your phone.</string>
+    <string name="container_backup_export">Export container</string>
+    <string name="container_backup_export_hint">Packs the container\'s whole current filesystem into one tar. Filesystem contents only — no image layers or config, so restoring it elsewhere means re-creating ports, volumes and environment. Tap Restore image on the archive in the list below to import it.</string>
+    <string name="container_backup_vm_stopped">Start the VM before running backup commands.</string>
+    <string name="container_backup_container_name">Container name</string>
+    <string name="container_backup_run_export">Export container</string>
+    <string name="container_backup_run_all">Back up all containers</string>
+    <string name="container_backup_all_hint">Exports every container currently in the VM — no name needed. Produces nothing if there are none yet.</string>
+    <string name="container_backup_copy_export">Copy export command</string>
+    <string name="container_backup_save_image">Save image</string>
+    <string name="container_backup_save_image_hint">Saves the image with all of its layers and metadata. After restoring it matches the original and the same container runs again — the one to use. Usually several times larger than an export. Fill in repository:tag, e.g. docker.io/library/nginx:latest — or tap an image in the list above and it fills in for you.</string>
+    <string name="container_backup_mirror">Mirror registry</string>
+    <string name="container_backup_mirror_none">None — direct connection</string>
+    <string name="container_backup_mirror_using">Applied: %1$s</string>
+    <string name="container_backup_mirror_hint">Pulls Docker Hub images through this mirror; only applies to docker.io references. With a mirror set, Save image pulls through it first, then archives.</string>
+    <string name="container_backup_mirror_direct">Docker Hub (direct)</string>
+    <string name="container_backup_mirror_daocloud">DaoCloud (docker.m.daocloud.io)</string>
+    <string name="container_backup_mirror_ustc">USTC (docker.mirrors.ustc.edu.cn)</string>
+    <string name="container_backup_mirror_tencent">Tencent Cloud (mirror.cc.tencentyun.com)</string>
+    <string name="container_backup_mirror_netease">NetEase (hub-mirror.c.163.com)</string>
+    <string name="container_backup_mirror_custom">Custom</string>
+    <string name="container_backup_mirror_custom_placeholder">e.g. docker.m.daocloud.io</string>
+    <string name="container_backup_image_ref">Image reference (repository:tag)</string>
+    <string name="container_backup_image_placeholder">docker.io/library/nginx:latest</string>
+    <string name="container_backup_run_save">Save image</string>
+    <string name="container_backup_copy_save">Copy save command</string>
+    <string name="container_backup_fallback">Fallback: copy commands</string>
+    <string name="container_backup_fallback_hint">The backups above run themselves. These buttons are only for reading a command before running it, or pasting into a shell outside the app.</string>
+    <string name="container_backup_scan_title">Contents of the VM</string>
+    <string name="container_backup_scan_hint">No need to type a name. Read the containers and images the VM already has, then tap one to fill the field below.</string>
+    <string name="container_backup_scan">Read containers and images</string>
+    <string name="container_backup_scan_working">Reading…</string>
+    <string name="container_backup_scan_empty">The VM has no containers or images yet. Create one first (for example an nginx container), then come back and read the list.</string>
+    <string name="container_backup_scan_containers">Containers</string>
+    <string name="container_backup_scan_images">Images</string>
+    <string name="container_backup_engine">Engine: %1$s (detected in the VM)</string>
+    <string name="container_backup_scan_no_containers">Images are there, but there are no containers. Images are only the material: exporting a container and backing all containers up act on containers, so there is nothing in the list to tap. Start one in the VM (for example nginx) and read the list again.</string>
+    <string name="container_backup_invalid_name">Container names must start with a letter or digit and contain only letters, digits, `_`, `.`, `-`.</string>
+    <string name="container_backup_err_scan_timeout">Reading the container list timed out.</string>
+    <string name="container_backup_err_failed">Backup failed: %1$s</string>
+    <string name="container_backup_err_no_engine">The VM has no container engine — neither podman nor docker. Install one inside the VM first (for example docker via apk or apt), then come back and back up again.</string>
+    <string name="container_backup_err_container_missing">Export failed: the VM has no container named %1$s. Create it in the Terminal first, or check the name for typos.</string>
+    <string name="container_backup_err_image_missing">Save failed: the VM has no image named %1$s. Pull it in the Terminal first, or check the reference.</string>
+    <string name="container_backup_err_exit">The backup command exited with status %1$d and produced no archive.</string>
+    <string name="container_backup_err_no_output">The backup command returned nothing, so success cannot be confirmed. Check the Terminal page.</string>
+    <string name="container_backup_copy_list">Copy list command</string>
+    <string name="container_backup_copy_all">Copy backup-all command</string>
+    <string name="container_backup_terminal_hint">Paste into the Podroid terminal to run. podroid-backup is included in newer guest images; older ones fall back to podman export automatically.</string>
+    <string name="container_backup_on_phone">Backups on phone</string>
+    <string name="container_backup_refresh">Refresh list</string>
+    <string name="container_backup_none">No backup archives found in /sdcard/Download/Qodroid/backups yet.</string>
+    <string name="container_backup_restore_image">Restore image</string>
+    <string name="container_backup_restore_confirm_title">Restore image %1$s?</string>
+    <string name="container_backup_restore_confirm_body">Imports this archive into the VM with podman load; a container export archive, which carries no image manifest, falls back to podman import. It then appears in podman images and can be run as a new container.</string>
+    <string name="container_backup_restore_working">Restoring…</string>
+    <string name="container_backup_restore_ok">Image restored: %1$s</string>
+    <string name="container_backup_restore_failed">Restore failed: %1$s</string>
+    <string name="container_backup_list_error">Couldn\'t read the backup folder. Try Refresh.</string>
+    <string name="container_backup_use_expl_title">How backups work</string>
+    <string name="container_backup_use_expl_1">Every backup lands in /sdcard/Download/Qodroid/backups/, the list at the bottom of this page.</string>
+    <string name="container_backup_use_expl_2">Export container = filesystem contents only. Tap Restore image on the archive to import it. On another machine you must re-create ports, volumes and environment.</string>
+    <string name="container_backup_use_expl_3">Save image = the image with all of its layers and metadata. After restoring it matches the original and the same container runs again. This is the one to use.</string>
+    <string name="container_backup_copied">Command copied</string>
+    <string name="container_backup_working">Backing up — watch progress on the Terminal page…</string>
+    <string name="container_backup_done">Backup finished: %1$s</string>
+    <string name="container_backup_none_all">No containers to back up. Nothing was exported.</string>
+    <string name="container_backup_err_no_session">No running Linux shell. Start the VM and open the Terminal tab first.</string>
+    <string name="container_backup_err_login">Could not log in to the guest shell.</string>
+    <string name="container_backup_err_timeout">Backup timed out. The archive in the VM may still be incomplete — check the Terminal page.</string>
+
+    <!-- Home -->
+    <string name="home_containers_created">Containers created</string>
+    <string name="home_containers_count">%1$d</string>
+    <string name="home_containers_unknown">—</string>
+    <string name="home_action_backup">Backup</string>
+    <string name="home_action_status">Status</string>
+
+    <string name="up">Up</string>
+    <string name="uptime_hours_minutes">%1$dh %2$dm</string>
+    <string name="uptime_minutes_seconds">%1$dm %2$ds</string>
+    <string name="uptime_seconds">%1$ds</string>
+
+    <!-- AVF Hint -->
+    <string name="avf_available">AVF (KVM) available on this device</string>
+    <string name="avf_hint_needs_pc">Needs a PC with adb, or the Shizuku app for on-device grant. Run once:</string>
+    <string name="avf_grant_commands">adb shell pm grant com.pxkf.qodroid \\\n  android.permission.MANAGE_VIRTUAL_MACHINE\nadb shell pm grant com.pxkf.qodroid \\\n  android.permission.USE_CUSTOM_VIRTUAL_MACHINE</string>
+
+    <!-- Backend fallback (#66): AVF was forced but this device can't run it -->
+    <string name="backend_fallback_suffix">" - AVF unavailable, running QEMU"</string>
+    <string name="backend_avf_unavailable">AVF is not available on this device: %1$s</string>
+    <string name="backend_fallback_banner">AVF was selected but is unavailable on this device. The VM is running on QEMU (software emulation).</string>
+    <string name="backend_fallback_reason_feature">the virtualization framework feature is not present</string>
+    <string name="backend_fallback_reason_permissions">required permissions have not been granted</string>
+    <string name="backend_fallback_reason_service">the system service is unreachable</string>
+    <string name="backend_fallback_reason_protected_only">this device only supports protected virtual machines</string>
+
+    <!-- Permissions -->
+    <string name="permissions">Permissions</string>
+    <string name="permissions_description">Podroid needs these to run the VM reliably.</string>
+    <string name="permissions_needed">Permissions needed</string>
+    <string name="perm_notifications_title">Notifications</string>
+    <string name="perm_notifications_why">Shows the VM\'s state and lets you stop it from the notification shade.</string>
+    <string name="perm_battery_title">Unrestricted background</string>
+    <string name="perm_battery_why">Keeps the VM running when the app is in the background.</string>
+    <string name="perm_grant">Grant</string>
+    <string name="perm_granted">Granted</string>
+
+    <!-- Setup Steps -->
+    <string name="step_1_of_5">Step 1 of 5</string>
+    <string name="step_2_of_5">Step 2 of 5</string>
+    <string name="step_3_of_5">Step 3 of 5</string>
+    <string name="step_4_of_5">Step 4 of 5</string>
+    <string name="step_5_of_5">Step 5 of 5</string>
+
+    <!-- Dialogs -->
+    <string name="update_available">Update available</string>
+    <string name="version_available">Version %1$s is available. You have %2$s.</string>
+    <string name="update_open_failed">Couldn\'t open the download page. No browser available?</string>
+
+    <!-- Language -->
+    <string name="language_label">Language</string>
+    <string name="system_default">System default</string>
+    <string name="language_zh">中文 (Chinese)</string>
+    <string name="language_en">English</string>
+
+    <!-- Error -->
+    <string name="error_title">Error</string>
+    <string name="try_again">Try again</string>
+
+    <!-- Sharing -->
+    <string name="sharing">Sharing</string>
+
+    <!-- Terminal -->
+    <string name="paste_text">Paste</string>
+    <string name="copy_text">Copy</string>
+    <string name="text_selection_more">More…</string>
+    <string name="terminal_title">Terminal</string>
+    <string name="vm_not_running_hint">Start the VM from the Home screen first.</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="terminal_disconnected_tap_retry">Disconnected. Tap to reconnect.</string>
+
+    <!-- Terminal Quick Settings -->
+    <string name="display_section">Display</string>
+    <string name="size_label">Size</string>
+    <string name="theme_with_value">Theme · %1$s</string>
+    <string name="font_with_value">Font · %1$s</string>
+    <string name="input_section">Input</string>
+    <string name="extra_keys">Extra keys</string>
+    <string name="haptics">Haptics</string>
+    <string name="color_themes">Color themes</string>
+    <string name="fonts">Fonts</string>
+    <string name="import_label">Import</string>
+    <string name="paste_url">Paste URL</string>
+    <string name="add_btn">+ Add</string>
+    <string name="remove_font_question">Remove font?</string>
+    <string name="remove_theme_question">Remove theme?</string>
+    <string name="item_will_be_deleted">"%1$s" will be deleted.</string>
+    <string name="delete_label">Delete</string>
+    <string name="search_n_items">Search %1$d</string>
+    <string name="import_theme">Import theme</string>
+    <string name="import_theme_hint">Paste a terminalcolors.com theme URL.</string>
+    <string name="import_theme_error">Couldn\'t import — check the URL.</string>
+    <string name="importing">Importing…</string>
+
+    <!-- X11 -->
+    <string name="x11_title">X11</string>
+    <string name="x11_open">Open X11 desktop</string>
+    <string name="x11_connecting">Connecting to X11 server...</string>
+    <string name="x11_not_ready">X11 server not ready — VM still booting?</string>
+    <string name="fullscreen">Fullscreen</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="terminal">Terminal</string>
+    <string name="resolution">Resolution</string>
+    <string name="match_viewport">Match viewport</string>
+    <string name="preset">Preset</string>
+    <string name="custom_resolution">Custom</string>
+    <string name="res_720p">720p</string>
+    <string name="res_900p">900p</string>
+    <string name="res_1080p">1080p</string>
+    <string name="res_1440p">1440p</string>
+    <string name="x11_render_scale">Render scale</string>
+    <string name="x11_render_scale_hint">Lower is faster. The desktop is scaled up to fit the screen.</string>
+    <string name="rotation">Rotation</string>
+    <string name="auto_rotation">Auto</string>
+    <string name="landscape">Landscape</string>
+    <string name="portrait">Portrait</string>
+    <string name="touch">Touch</string>
+    <string name="direct_touch">Direct touch</string>
+    <string name="trackpad">Trackpad</string>
+    <string name="pointer_speed">Pointer speed</string>
+    <string name="pointer_acceleration">Pointer acceleration</string>
+    <string name="display">Display</string>
+    <string name="show_extra_keys">Show extra keys</string>
+    <string name="start_fullscreen">Start in fullscreen</string>
+    <string name="server_dpi">Server DPI</string>
+    <string name="applies_on_next_vm_start">Applies on next VM start</string>
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <!-- Misc -->
+    <string name="add">Add</string>
+    <string name="version_label">Version</string>
+    <string name="stop_vm_before_edit">Stop the VM before editing — changes apply on next boot.</string>
+
+    <!-- USB Passthrough -->
+    <string name="usb_passthrough">USB Passthrough</string>
+    <string name="usb_passthrough_description">Optional. Hot-plug external USB devices (Wi-Fi, storage, serial, etc.) into the VM at runtime.</string>
+    <string name="enable_usb_passthrough">Enable USB passthrough</string>
+    <string name="usb_devices_section">Devices</string>
+    <string name="usb_passthrough_available">Each device asks for permission when you plug it in. Adds a USB controller to the VM, which costs a little emulation overhead, so leave it off if you do not need it. You can change this later in Settings.</string>
+    <string name="usb_passthrough_unavailable">Not available on this backend: USB passthrough needs QEMU control socket, which the AVF backend does not provide. You can change this later in Settings.</string>
+    <string name="usb_passthrough_settings_label">USB passthrough</string>
+    <string name="usb_passthrough_settings_description_available">Hot-plugs external USB devices (Wi-Fi, storage, serial, etc.) into the VM. Each device asks for permission when attached. Adds a USB controller at boot, so restart the VM to apply.</string>
+    <string name="usb_passthrough_settings_description_unavailable">Not available on the %1$s backend: USB passthrough rides QEMU\'s QMP control socket, which the AVF backend doesn\'t provide.</string>
+    <string name="server_mode">Server mode</string>
+    <string name="server_mode_desc">Keeps the VM running with the screen blacked out to save power. The app stays in the foreground so the VM is never stopped. To exit, press and hold anywhere for 3 seconds.</string>
+    <string name="server_mode_enable">Enable server mode</string>
+    <string name="server_mode_exit_hint">Hold 3 seconds to exit</string>
+
+    <!-- AVF Boot Failure -->
+    <string name="avf_boot_failed_try_one_core">AVF failed to boot on this device. Try setting CPU cores to 1, or switch the backend to QEMU.</string>
+    <string name="avf_boot_failed_switch_qemu">AVF couldn\'t boot on this device. Switch the backend to QEMU.</string>
+    <string name="avf_action_use_one_core">Use 1 core</string>
+    <string name="avf_action_switch_qemu">Switch to QEMU</string>
+    <string name="avf_action_retry">Retry</string>
+    <string name="avf_net_workaround_failed">A compatibility step needed for AVF networking failed on this device. Linux may start without network access. If so, switch the backend to QEMU.</string>
+
+    <!-- Home pager: 5 swipeable pages -->
+    <string name="pager_tab_home">Home</string>
+    <string name="pager_tab_settings">Settings</string>
+    <string name="pager_tab_terminal">Terminal</string>
+    <string name="pager_tab_files">Files</string>
+    <string name="pager_tab_about">About</string>
+
+    <!-- Script library page -->
+
+    <!-- File manager page -->
+    <string name="file_manager_title">Files</string>
+    <string name="files_tab_files">Files</string>
+    <string name="files_tab_mounts">Mounts</string>
+    <string name="up_one_level">Up one level</string>
+    <string name="storage_access_needed">Storage access is needed to browse Downloads.</string>
+    <string name="files_guest_checking">Checking Linux…</string>
+    <string name="files_guest_loading">Reading the Linux filesystem…</string>
+    <string name="files_guest_tap_to_load">Tap here to read the Linux filesystem.</string>
+    <string name="files_guest_unsupported">Not available for this profile. The Linux filesystem is read by running commands in the Linux shell, and the Windows profile has no shell — watch it through the X11 preview instead.</string>
+    <string name="guest_files_unreachable">Could not read the Linux filesystem. Is the VM running, and has the terminal connected?</string>
+    <string name="empty_folder">This folder is empty.</string>
+    <string name="folder_hint_long_press">Long-press to cd into this folder</string>
+    <string name="mounts_downloads_title">Downloads share</string>
+    <string name="mounts_host_path">Host path</string>
+    <string name="mounts_guest_path">VM path</string>
+    <string name="mounts_state_mounted">Mounted</string>
+    <string name="mounts_state_not_mounted">Not mounted</string>
+    <string name="mounts_state_not_enabled">Not enabled</string>
+    <string name="mounts_state_checking">Checking…</string>
+    <string name="mounts_state_no_session">VM not running</string>
+    <string name="mounts_open">Open</string>
+    <string name="mounts_go_to_settings">Open Settings</string>
+    <string name="mounts_not_enabled_hint">Sharing is off by default. Stop the VM, turn on Settings → Storage → Downloads Sharing, grant the all-files permission, then start the VM again.</string>
+    <string name="mounts_not_mounted_hint">The shared folder has not appeared yet. If it stays empty, storage access may be off.</string>
+    <string name="mounts_no_session_hint">Start the Linux VM first to check the mount.</string>
+    <string name="mounts_shared_contents">Shared contents</string>
+    <string name="mounts_host_loading">Reading Downloads…</string>
+    <string name="mounts_host_unreadable">Cannot read this directory. Storage access may be off.</string>
+    <string name="mounts_refresh">Refresh</string>
+    <string name="mounts_folder">Folder</string>
+    <string name="mounts_delete">Delete</string>
+    <string name="mounts_delete_confirm_title">Delete %1$s?</string>
+    <string name="mounts_delete_failed">Could not delete %1$s</string>
+    <string name="cd_into_folder">cd into folder</string>
+    <string name="cd_into_folder_confirm">Run \'cd %1$s\' in the terminal?</string>
+    <string name="action_cd">cd</string>
+
+    <!-- About page -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_visit_website">Visit website</string>
+    <string name="about_check_updates">Check for updates</string>
+    <string name="about_view_logs">View logs</string>
+    <string name="log_viewer_title">Logs</string>
+    <string name="log_viewer_refresh">Refresh</string>
+    <string name="log_viewer_copy">Copy logs</string>
+    <string name="log_viewer_copied">Logs copied to clipboard</string>
+    <string name="log_viewer_loading">Loading logs…</string>
+    <string name="log_viewer_empty">No log content available.</string>
+    <string name="about_features_title">Features</string>
+    <string name="about_feature_vm">Real Linux &amp; Windows VMs (QEMU aarch64/x86_64, AVF)</string>
+    <string name="about_feature_terminal">In-app terminal with 122 themes &amp; 13 fonts</string>
+    <string name="about_feature_x11">X11 desktop viewer for GUI apps</string>
+    <string name="about_feature_containers">Podman, Docker &amp; LXC containers</string>
+    <string name="about_website_url">https://qodroid.fkuu.top/</string>
+
+    <!-- Dual terminal: Windows-on-ARM / custom image tab -->
+    <string name="boot_mode">Boot mode</string>
+    <string name="boot_mode_hint">Selects what the VM boots and what the terminal page shows.</string>
+    <string name="dual_terminal_linux">Linux</string>
+    <string name="dual_terminal_windows">Windows</string>
+    <string name="boot_mode_windows_empty">No image selected yet — tap 选择磁盘镜像 below to pick a file.</string>
+    <string name="boot_mode_windows_hint">Emulated x86_64: boots far slower than Linux and needs 4 GB of guest RAM.</string>
+    <string name="windows_image_title">Windows / Custom image</string>
+    <string name="windows_image_none">No image selected</string>
+    <string name="windows_image_hint">Browse Downloads for a qcow2/img/raw/iso image. Tap a file to select it; the VM then boots from it via UEFI.</string>
+    <string name="windows_start_vm">Start VM</string>
+    <string name="windows_stop_vm">Stop VM</string>
+    <!-- Versions (About page) -->
+    <string name="about_versions">Versions</string>
+    <string name="about_qemu_aarch64">QEMU (aarch64 target)</string>
+    <string name="about_qemu_x86_64">QEMU (x86_64 target)</string>
+    <string name="about_qemu_absent">not bundled in this build</string>
+    <string name="about_distro_value">Alpine 3.24</string>
+    <string name="about_versions_hint">Both emulators target the same QEMU release. The x86_64 one runs Windows guests and needs a much larger memory allocation.</string>
+    <string name="about_changelog_title">Changelog</string>
+    <string name="about_docs_title">Documentation</string>
+    <string name="docs_title">Documentation</string>
+    <string name="docs_start_title">Start the VM</string>
+    <string name="docs_start_desc">Press Start on the home screen; the first boot takes a while. Once the VM is up, the terminal button opens a root shell inside it.</string>
+    <string name="docs_start_code"># SSH from your phone into the VM\nssh root@localhost -p 9922</string>
+    <string name="docs_create_title">Create a container</string>
+    <string name="docs_create_desc">Containers are created inside the VM with whichever engine it has. This starts an Nginx web server that keeps running in the background.</string>
+    <string name="docs_create_code">docker run -d --name myapp -p 8080:80 nginx</string>
+    <string name="docs_ports_title">Reach it from the phone</string>
+    <string name="docs_ports_desc">A port published with -p is reachable from the phone at localhost. In the example above, 8080 is the port to open on the phone and 80 is the port inside the container.</string>
+    <string name="docs_ports_code"># from a browser on the phone\nhttp://localhost:8080</string>
+    <string name="docs_backup_title">Backup and restore</string>
+    <string name="docs_backup_desc">Backups are plain tar archives written to the shared folder. They can also be created and restored from the container backup screen.</string>
+    <string name="docs_backup_code"># where the backups live\n/storage/emulated/0/Download/Qodroid/backups/</string>
+    <string name="docs_faq_title">Frequently asked questions</string>
+    <string name="docs_faq_desc">Things that trip people up, and what to try.</string>
+    <string name="docs_faq_no_backup">A backup has no containers in it - a stopped container still has to be exported before it is archived, so make sure it is running first. docker ps shows what the VM currently holds.</string>
+    <string name="docs_faq_no_containers">The scan finds no containers - they may live in a different engine, or have been removed. Run docker ps or podman ps in the terminal to see what the VM actually holds.</string>
+    <string name="docs_faq_pull_fail">An image will not pull - usually the VM has no network route, or the registry is blocked. Check that the VM can reach the network, and use a mirror source if one is available.</string>
+    <string name="docs_faq_share">Move or share a backup - the archives are ordinary tar files in the shared folder, so they can be copied or synced like any other file. Restore reads from that same folder.</string>
+    <string name="docs_faq_dns">The Windows guest cannot reach the internet. DHCP hands out an IP (10.0.2.x) from QEMU\'s built-in NAT, but its nameserver is a proxy that forwards through the phone, which is unreliable. Set the Windows adapter\'s DNS directly to 223.5.5.5 and 8.8.8.8 in the network adapter settings, and web pages load again. Ping still fails either way - the NAT does not forward ICMP.</string>
+    <string name="about_opensource_title">Open source and license</string>
+    <string name="about_opensource_body">This app is a modified version of Podroid. Podroid and its derivatives are released under GNU GPL v2, and so is this build; getting the full source code, modifying it and redistributing it are all permitted.</string>
+    <string name="about_opensource_upstream">Upstream project</string>
+    <string name="about_opensource_upstream_value">Podroid</string>
+    <string name="about_opensource_repository">Upstream repository</string>
+    <string name="about_opensource_repository_value">ExTV/Podroid</string>
+    <string name="about_opensource_repository_url">https://github.com/ExTV/Podroid</string>
+    <string name="about_opensource_license">License</string>
+    <string name="about_opensource_license_value">GNU GPL v2</string>
+    <string name="about_opensource_copyright">Original copyright</string>
+    <string name="about_opensource_copyright_value">2024-2026 Podroid contributors</string>
+    <string name="about_opensource_view_license">View the full license</string>
+    <string name="about_opensource_license_title">GNU GENERAL PUBLIC LICENSE v2</string>
+    <string name="about_opensource_license_close">Close</string>
+    <string name="about_opensource_license_unavailable">The bundled license text could not be read.</string>
+    <string name="changelog_200_title">v2.0.0</string>
+    <string name="changelog_200_3">Restoring an archive falls back to import when load fails, so both container exports and saved images can be imported.</string>
+    <string name="changelog_200_4">Exporting checks whether the container exists first and reports the missing name directly, instead of failing halfway through.</string>
+    <string name="changelog_200_5">New How backups work section on the backup page; the mirror registry is a dropdown and shows the host that is applied.</string>
+    <string name="changelog_200_7">Terminal quick keys gained DEL and SHIFT, both working as sticky modifiers.</string>
+    <string name="changelog_200_8">Fixed a whole-VM backup that sat silent being reported as a timeout.</string>
+    <string name="changelog_200_12">Container backup supports docker: podman is used when present, and docker automatically when it is the only engine — listing, export, saving images and restoring all work with either.</string>
+    <string name="changelog_200_13">When neither container engine exists the failure says so plainly instead of just reporting a failed command, and points at installing an engine before retrying.</string>
+    <string name="changelog_200_15">Fixed the Windows boot-mode hint: it now points at the 选择磁盘镜像 button below instead of the terminal page.</string>
+    <string name="changelog_200_16">The download folder shown on the backup page is now the full path.</string>
+    <string name="changelog_200_17">The changelog moved to its own page, reached from a button on the About page.</string>
+    <!-- AVF diagnostics (Settings → Advanced → Backend) -->
+    <string name="avf_diagnostics">AVF diagnostics</string>
+    <string name="guest_files_no_session">No terminal session. Open the Terminal page once so Podroid connects to the VM console, then try again.</string>
+    <string name="guest_files_login_failed">The VM shell did not reach a login prompt. Try the Terminal page — if it stops at \"podroid login:\", type \"root\" then \"podroid\".</string>
+    <string name="guest_files_timeout">The Linux shell accepted the command but produced no output in time. It may be busy — try again.</string>
+    <string name="guest_files_unparseable">Could not read this listing.\nRaw output:\n%1$s</string>
+    <string name="export_to_downloads">Export to Download/Qodroid</string>
+    <string name="files_copy_path">Copy path</string>
+    <string name="files_path_copied">Path copied</string>
+    <string name="export_dir_hint">Export copies this folder and its contents to the host Downloads under Qodroid/. It needs Downloads sharing enabled (Settings → Storage → Downloads Sharing).</string>
+    <string name="export_file_hint">Export copies this file to the host Downloads under Qodroid/. It needs Downloads sharing enabled (Settings → Storage → Downloads Sharing).</string>
+    <string name="export_working">Exporting…</string>
+    <string name="export_result_title">Export</string>
+    <string name="export_ok">Exported to Download/Qodroid/%1$s</string>
+    <string name="export_not_shared">Downloads sharing is not mounted, so there is nowhere to export to. Stop the VM, turn on Settings → Storage → Downloads Sharing, then start it again.</string>
+    <string name="export_no_session">No terminal session, so the guest cannot be asked to copy the file. Open the Terminal page once, then retry.</string>
+    <string name="export_failed">Could not copy %1$s out of the VM.</string>
+</resources>
