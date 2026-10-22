@@ -130,6 +130,8 @@
     <string name="storage">Storage</string>
     <string name="autostart_on_boot">Start VM on boot</string>
     <string name="autostart_on_boot_desc">Boot the VM automatically after the phone starts. Automation apps can also trigger it with the intent actions com.pxkf.qodroid.action.START_VM and STOP_VM.</string>
+    <string name="auto_check_updates">Check for updates on launch</string>
+    <string name="auto_check_updates_desc">Automatically check for a newer version every time the app starts. Only a newer release is announced; failures and "already up to date" stay silent. The manual check on the About page always reports its result.</string>
     <string name="reset_vm">Reset VM (deletes all data)</string>
     <string name="reset_vm_description">Full App Reset?</string>
     <string name="reset_vm_text">This will clear ALL application data, including your VM storage, settings, and port rules. The app will close and return to a freshly-installed state.</string>
@@ -146,6 +148,8 @@
     <string name="extra_kernel_cmdline">Extra kernel cmdline</string>
     <string name="kernel_cmdline_helper">Appended after console=ttyAMA0 — controls scheduler, mitigations, log level, etc.</string>
     <string name="qemu_args_helper">-cpu, -accel, -object, -device, -overcommit, etc. Whitespace-separated.</string>
+    <string name="extra_windows_qemu_args">Windows extra QEMU args</string>
+    <string name="windows_qemu_args_helper">Used when the Windows VM starts. Leave empty to reuse the extra QEMU args above. Whitespace-separated.</string>
     <string name="reset_field_confirm_title">Reset %1$s?</string>
     <string name="reset_field_confirm_body">This clears your customization and restores the default value.</string>
     <string name="about">About</string>
@@ -330,6 +334,8 @@
 
     <!-- Dialogs -->
     <string name="update_available">Update available</string>
+    <string name="update_up_to_date">You\'re already on the latest version.</string>
+    <string name="update_check_failed">Update check failed. Check your connection and try again.</string>
     <string name="version_available">Version %1$s is available. You have %2$s.</string>
     <string name="update_open_failed">Couldn\'t open the download page. No browser available?</string>
 
@@ -504,7 +510,7 @@
     <string name="about_feature_terminal">In-app terminal with 122 themes &amp; 13 fonts</string>
     <string name="about_feature_x11">X11 desktop viewer for GUI apps</string>
     <string name="about_feature_containers">Podman, Docker &amp; LXC containers</string>
-    <string name="about_website_url">https://qodroid.fkuu.top/</string>
+    <string name="about_website_url">https://github.com/mf9593/Qodroid</string>
 
     <!-- Dual terminal: Windows-on-ARM / custom image tab -->
     <string name="boot_mode">Boot mode</string>

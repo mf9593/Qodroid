@@ -20,6 +20,18 @@ data class UpdateInfo(
     val releaseUrl: String,
 )
 
+/** Outcome of a manual or automatic update check. */
+sealed interface UpdateCheckResult {
+    /** A newer release exists. */
+    data class Available(val info: UpdateInfo) : UpdateCheckResult
+
+    /** Check succeeded but the current version is already the latest. */
+    data object UpToDate : UpdateCheckResult
+
+    /** Network/JSON failure — the check could not complete. */
+    data object Failed : UpdateCheckResult
+}
+
 /**
  * Returns true when the cache has expired and a fresh network check is warranted.
  *
@@ -129,7 +141,14 @@ class UpdateRepository @Inject constructor(
     // in-app update check for a full day.
     private val retryFloorMs = 20 * 60 * 1000L
 
-    suspend fun checkForUpdate(currentVersion: String): UpdateInfo? = withContext(Dispatchers.IO) {
+    /**
+     * Checks for a newer release. With [force] false the 24h cache gate applies
+     * (used by the automatic startup check); with [force] true the gate is
+     * skipped (used by the About page's manual "check for updates" button, so a
+     * tap always yields a definite outcome instead of a silent cache hit).
+     */
+    suspend fun checkForUpdate(currentVersion: String, force: Boolean = false): UpdateCheckResult =
+        withContext(Dispatchers.IO) {
         // Wall-clock time so the 24h gate survives device reboots and deep sleep.
         val now = System.currentTimeMillis()
         var connection: java.net.HttpURLConnection? = null
@@ -138,11 +157,11 @@ class UpdateRepository @Inject constructor(
                 .catch { e -> if (e is java.io.IOException) emit(emptyPreferences()) else throw e }
                 .first()[lastCheckKey] ?: 0L
 
-            if (!shouldCheck(now, lastCheck, cacheValidityMs)) {
-                return@withContext null
+            if (!force && !shouldCheck(now, lastCheck, cacheValidityMs)) {
+                return@withContext UpdateCheckResult.UpToDate
             }
 
-            connection = URL("https://api.github.com/repos/ExTV/Podroid/releases/latest")
+            connection = URL("https://api.github.com/repos/mf9593/Qodroid/releases/latest")
                 .openConnection() as java.net.HttpURLConnection
             connection.connectTimeout = 5000
             connection.readTimeout = 5000
@@ -153,7 +172,7 @@ class UpdateRepository @Inject constructor(
                 // Consume error body so the connection can be reused, then back off.
                 runCatching { connection.errorStream?.bufferedReader()?.use { it.readText() } }
                 context.dataStore.edit { it[lastCheckKey] = now }
-                return@withContext null
+                return@withContext UpdateCheckResult.Failed
             }
 
             val json = connection.inputStream.bufferedReader().use { it.readText() }
@@ -164,7 +183,7 @@ class UpdateRepository @Inject constructor(
 
             if (tag.isEmpty() || url.isEmpty()) {
                 context.dataStore.edit { it[lastCheckKey] = now }
-                return@withContext null
+                return@withContext UpdateCheckResult.Failed
             }
 
             context.dataStore.edit { it[lastCheckKey] = now }
@@ -172,7 +191,11 @@ class UpdateRepository @Inject constructor(
             // Build-type suffix (`-debug`) is decoration, not a prerelease — strip it so
             // 1.1.7-debug compares equal to the 1.1.7 release tag instead of "older".
             val normalizedCurrent = currentVersion.removeSuffix("-debug")
-            if (isNewer(tag, normalizedCurrent)) UpdateInfo(tag, url) else null
+            if (isNewer(tag, normalizedCurrent)) {
+                UpdateCheckResult.Available(UpdateInfo(tag, url))
+            } else {
+                UpdateCheckResult.UpToDate
+            }
         } catch (c: kotlinx.coroutines.CancellationException) {
             // Coroutine cancellation is not a check failure — don't record a
             // timestamp (which would back off a check the user may retry) and
@@ -188,7 +211,7 @@ class UpdateRepository @Inject constructor(
             android.util.Log.w("UpdateRepository", "update check failed", e)
             val stamp = backoffStamp(now, transient = e is java.io.IOException, cacheValidityMs, retryFloorMs)
             runCatching { context.dataStore.edit { it[lastCheckKey] = stamp } }
-            null
+            UpdateCheckResult.Failed
         } finally {
             connection?.disconnect()
         }

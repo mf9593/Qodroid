@@ -64,6 +64,12 @@ class SettingsRepository @Inject constructor(
          */
         val KEY_AUTO_LOGIN             = booleanPreferencesKey("auto_login")
         /**
+         * Check for app updates automatically at launch. On by default so a
+         * newer release surfaces without the user hunting for the About button;
+         * off silences it entirely (the manual check still works).
+         */
+        val KEY_AUTO_CHECK_UPDATES     = booleanPreferencesKey("auto_check_updates")
+        /**
          * QEMU's built-in VNC server (`-vnc 127.0.0.1:1`). Distinct from the
          * guest Xvnc forward on 5900, which needs an x11vnc inside the guest and
          * so cannot serve a Windows guest.
@@ -88,6 +94,8 @@ class SettingsRepository @Inject constructor(
         val KEY_TERMINAL_COLOR_THEME   = stringPreferencesKey("terminal_color_theme")
         val KEY_TERMINAL_FONT          = stringPreferencesKey("terminal_font")
         val KEY_QEMU_EXTRA_ARGS        = stringPreferencesKey("qemu_extra_args")
+        /** Windows-specific extras; empty falls back to the shared [KEY_QEMU_EXTRA_ARGS]. */
+        val KEY_WINDOWS_QEMU_EXTRA_ARGS = stringPreferencesKey("windows_qemu_extra_args")
         val KEY_KERNEL_EXTRA_CMDLINE   = stringPreferencesKey("kernel_extra_cmdline")
         val KEY_SHOW_EXTRA_KEYS        = booleanPreferencesKey("show_extra_keys")
         val KEY_HAPTICS_ENABLED        = booleanPreferencesKey("haptics_enabled")
@@ -154,6 +162,16 @@ class SettingsRepository @Inject constructor(
             "-overcommit mem-lock=off"
 
         /**
+         * Windows-mode extras. No -cpu/-accel here: the engine emits its own
+         * qemu64 CPU and TCG accel for x86, and the ARM-tuned values in the
+         * shared default would be stripped anyway. What remains is portable.
+         */
+        const val DEFAULT_WINDOWS_QEMU_EXTRA_ARGS =
+            "-object rng-random,id=rng0,filename=/dev/urandom " +
+            "-device virtio-rng-pci,rng=rng0 " +
+            "-overcommit mem-lock=off"
+
+        /**
          * Default extra kernel cmdline — quiet boot + TCG-safe mitigations.
          * `elevator=` is deprecated since Linux 5.0; podroid-bootstrap sets the I/O
          * scheduler per-device via sysfs instead.
@@ -183,6 +201,7 @@ class SettingsRepository @Inject constructor(
     val isSetupDone          = pref(KEY_SETUP_DONE, false)
     val sshEnabled           = pref(KEY_SSH_ENABLED, false)
     val autoLogin            = pref(KEY_AUTO_LOGIN, false)
+    val autoCheckUpdates     = pref(KEY_AUTO_CHECK_UPDATES, true)
     // Default on: with it off and the guest Xvnc forward suppressed, a Windows
     // guest has no display path at all. QEMU's VNC is loopback-only with no
     // auth, so it is not exposed off-device either way.
@@ -192,6 +211,7 @@ class SettingsRepository @Inject constructor(
     val terminalColorTheme   = pref(KEY_TERMINAL_COLOR_THEME, "default")
     val terminalFont         = pref(KEY_TERMINAL_FONT, "default")
     val qemuExtraArgs        = pref(KEY_QEMU_EXTRA_ARGS, DEFAULT_QEMU_EXTRA_ARGS)
+    val windowsQemuExtraArgs = pref(KEY_WINDOWS_QEMU_EXTRA_ARGS, DEFAULT_WINDOWS_QEMU_EXTRA_ARGS)
     val kernelExtraCmdline   = pref(KEY_KERNEL_EXTRA_CMDLINE, DEFAULT_KERNEL_EXTRA_CMDLINE)
     val showExtraKeys        = pref(KEY_SHOW_EXTRA_KEYS, true)
     val hapticsEnabled       = pref(KEY_HAPTICS_ENABLED, true)
@@ -250,12 +270,14 @@ class SettingsRepository @Inject constructor(
     suspend fun setStorageAccessEnabled(value: Boolean)  = set(KEY_STORAGE_ACCESS_ENABLED, value)
     suspend fun setSshEnabled(value: Boolean)            = set(KEY_SSH_ENABLED, value)
     suspend fun setAutoLogin(value: Boolean)              = set(KEY_AUTO_LOGIN, value)
+    suspend fun setAutoCheckUpdates(value: Boolean)       = set(KEY_AUTO_CHECK_UPDATES, value)
     suspend fun setVncEnabled(value: Boolean)            = set(KEY_VNC_ENABLED, value)
     suspend fun setVncExpose(value: Boolean)             = set(KEY_VNC_EXPOSE, value)
     suspend fun setUefiEnabled(value: Boolean)           = set(KEY_UEFI_ENABLED, value)
     suspend fun setTerminalColorTheme(value: String)     = set(KEY_TERMINAL_COLOR_THEME, value)
     suspend fun setTerminalFont(value: String)           = set(KEY_TERMINAL_FONT, value)
     suspend fun setQemuExtraArgs(value: String)          = set(KEY_QEMU_EXTRA_ARGS, value)
+    suspend fun setWindowsQemuExtraArgs(value: String)   = set(KEY_WINDOWS_QEMU_EXTRA_ARGS, value)
     suspend fun setKernelExtraCmdline(value: String)     = set(KEY_KERNEL_EXTRA_CMDLINE, value)
     suspend fun setShowExtraKeys(value: Boolean)         = set(KEY_SHOW_EXTRA_KEYS, value)
     suspend fun setHapticsEnabled(value: Boolean)        = set(KEY_HAPTICS_ENABLED, value)
@@ -355,6 +377,7 @@ class SettingsRepository @Inject constructor(
     suspend fun getTerminalColorThemeSnapshot()   = terminalColorTheme.first()
     suspend fun getTerminalFontSnapshot()         = terminalFont.first()
     suspend fun getQemuExtraArgsSnapshot()        = qemuExtraArgs.first()
+    suspend fun getWindowsQemuExtraArgsSnapshot() = windowsQemuExtraArgs.first()
     suspend fun getKernelExtraCmdlineSnapshot()   = kernelExtraCmdline.first()
     suspend fun getEngineSelectionSnapshot()      = engineSelection.first()
     suspend fun getVmModeSnapshot()               = vmMode.first()

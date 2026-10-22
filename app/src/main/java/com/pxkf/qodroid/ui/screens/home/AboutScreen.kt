@@ -16,12 +16,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.ui.window.Dialog
@@ -57,10 +60,48 @@ fun AboutScreen(
     onNavigateBack: () -> Unit = {},
     onNavigateToChangelog: () -> Unit = {},
     onNavigateToDocs: () -> Unit = {},
+    updateInfo: com.pxkf.qodroid.data.repository.UpdateInfo? = null,
+    updateNotice: Int? = null,
+    onDismissUpdate: () -> Unit = {},
+    onConsumeUpdateNotice: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var showLogViewer by remember { mutableStateOf(false) }
     var showLicense by remember { mutableStateOf(false) }
+
+    // Manual update-check feedback lives on this page, not on Home: a tap on
+    // "Check for updates" here must answer here. New version -> dialog; already
+    // latest or failed -> toast.
+    updateNotice?.let { res ->
+        android.widget.Toast.makeText(context, res, android.widget.Toast.LENGTH_LONG).show()
+        onConsumeUpdateNotice()
+    }
+
+    updateInfo?.let { info ->
+        AlertDialog(
+            onDismissRequest = onDismissUpdate,
+            icon  = { Icon(Icons.Default.SystemUpdate, contentDescription = stringResource(R.string.update_available)) },
+            title = { Text(stringResource(R.string.update_available)) },
+            text  = { Text(stringResource(R.string.version_available, info.latestVersion, BuildConfig.VERSION_NAME)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    runCatching {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(info.releaseUrl)))
+                    }.onFailure {
+                        android.widget.Toast.makeText(
+                            context,
+                            context.getString(R.string.update_open_failed),
+                            android.widget.Toast.LENGTH_LONG,
+                        ).show()
+                    }
+                    onDismissUpdate()
+                }) { Text(stringResource(R.string.download)) }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissUpdate) { Text(stringResource(R.string.later)) }
+            },
+        )
+    }
 
     // Whether the x86_64 emulator is actually bundled. Resolved once per page:
     // it cannot change while the process lives, and a stat on every recompose

@@ -677,10 +677,17 @@ class QemuEngine @Inject constructor(
         config: VmConfig,
     ): List<String> {
         val args = mutableListOf<String>()
-        val userQemuExtras = config.qemuExtraArgs.trim()
+        // Each mode has its own extras — no cross-mode fallback: the Linux set
+        // is ARM-tuned (-cpu max,...) and would break an x86_64 guest, so a
+        // cleared Windows field means "no extras", not "reuse the Linux ones".
+        val isWindowsMode = config.vmMode == VmMode.WINDOWS
+        val userQemuExtras = if (isWindowsMode) {
+            config.windowsQemuExtraArgs.trim()
+        } else {
+            config.qemuExtraArgs.trim()
+        }
         val userKernelExtras = config.kernelExtraCmdline.trim()
         val customImage = config.customImagePath.trim().let { if (it.isEmpty()) null else File(it) }
-        val isWindowsMode = config.vmMode == VmMode.WINDOWS
 
         if (isWindowsMode) {
             // q35, not virt: virt is the ARM board. pauth-impdef is arm64-only, and

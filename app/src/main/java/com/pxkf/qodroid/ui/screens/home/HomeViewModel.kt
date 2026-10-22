@@ -8,6 +8,7 @@ import com.pxkf.qodroid.BuildConfig
 import com.pxkf.qodroid.R
 import com.pxkf.qodroid.data.repository.PortForwardRepository
 import com.pxkf.qodroid.data.repository.SettingsRepository
+import com.pxkf.qodroid.data.repository.UpdateCheckResult
 import com.pxkf.qodroid.data.repository.UpdateInfo
 import com.pxkf.qodroid.data.repository.UpdateRepository
 import com.pxkf.qodroid.engine.EngineHolder
@@ -225,6 +226,19 @@ class HomeViewModel @Inject constructor(
     private val _updateInfo = MutableStateFlow<UpdateInfo?>(null)
     val updateInfo: StateFlow<UpdateInfo?> = _updateInfo.asStateFlow()
 
+    /** One-shot toast for the manual update check outcome (latest / failed). */
+    private val _updateNotice = MutableStateFlow<Int?>(null)
+    val updateNotice: StateFlow<Int?> = _updateNotice.asStateFlow()
+    fun consumeUpdateNotice() { _updateNotice.value = null }
+
+    /** Automatic update check on launch. */
+    val autoCheckUpdates: StateFlow<Boolean> = settingsRepository.autoCheckUpdates
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    fun setAutoCheckUpdates(value: Boolean) {
+        viewModelScope.launch { settingsRepository.setAutoCheckUpdates(value) }
+    }
+
     /** Cached once per ViewModel lifetime; the hint and backend logic read it. */
     private val _avfProbe: AvfReport = AvfDiagnostics.probe(context)
 
@@ -281,25 +295,48 @@ class HomeViewModel @Inject constructor(
     private fun checkForUpdate() {
         viewModelScope.launch {
             try {
-                val info = updateRepository.checkForUpdate(BuildConfig.VERSION_NAME) ?: return@launch
-                if (!updateRepository.isDismissed(info.latestVersion)) {
-                    _updateInfo.value = info
+                // Automatic check bypasses the 24h cache so every launch really
+                // asks GitHub (the cache gate would otherwise swallow launches
+                // within a day of a manual check and never surface a release).
+                // A newer release still respects the user's "don't ask again".
+                when (val result = updateRepository.checkForUpdate(BuildConfig.VERSION_NAME, force = true)) {
+                    is UpdateCheckResult.Available -> _updateInfo.value = result.info
+                    // Automatic check: silence "already latest" and failures.
+                    else -> Unit
                 }
-            } catch (e: CancellationException) {
-                throw e
+            } catch (c: CancellationException) {
+                throw c
             } catch (e: Exception) {
                 Log.w(TAG, "update check failed", e)
             }
         }
     }
 
-    /** Public trigger for the About page's "check for update" button. */
-    fun refreshUpdateCheck() = checkForUpdate()
+    /** Manual check for the About page: always reports a definite outcome. */
+    fun refreshUpdateCheck() {
+        viewModelScope.launch {
+            try {
+                when (val result = updateRepository.checkForUpdate(BuildConfig.VERSION_NAME, force = true)) {
+                    // A manual tap means "show me the update again" — ignore any
+                    // previous "later" dismissal so the dialog actually returns.
+                    is UpdateCheckResult.Available -> _updateInfo.value = result.info
+                    UpdateCheckResult.UpToDate -> _updateNotice.value = R.string.update_up_to_date
+                    UpdateCheckResult.Failed -> _updateNotice.value = R.string.update_check_failed
+                }
+            } catch (c: CancellationException) {
+                throw c
+            } catch (e: Exception) {
+                Log.w(TAG, "update check failed", e)
+                _updateNotice.value = R.string.update_check_failed
+            }
+        }
+    }
 
     fun dismissUpdate() {
-        val version = _updateInfo.value?.latestVersion ?: return
+        // "Later" closes this dialog only. A persistent per-version dismissal
+        // would silence every future launch check — the exact opposite of the
+        // "check on every start" setting — so nothing is written to storage.
         _updateInfo.value = null
-        viewModelScope.launch { updateRepository.dismissUpdate(version) }
     }
 
     fun dismissAvfHint() {
@@ -413,6 +450,15 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
+        // Check for updates at launch when the user hasn't disabled it. Runs
+        // after a short delay so it never races the first frame. The automatic
+        // path is quiet: only an actual newer release pops the dialog.
+        viewModelScope.launch {
+            if (settingsRepository.autoCheckUpdates.first()) {
+                kotlinx.coroutines.delay(3_000L)
+                checkForUpdate()
+            }
+        }
         // The login belongs to the terminal session that performed it. Once that
         // session is gone — VM stopped, crashed, restarted — a lingering "Logged
         // in" would be a claim the app can no longer back, so the status is

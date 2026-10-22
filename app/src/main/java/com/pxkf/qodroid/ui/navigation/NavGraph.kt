@@ -273,6 +273,10 @@ fun PodroidNavGraph(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToChangelog = { navController.navigate(Routes.CHANGELOG) },
                 onNavigateToDocs = { navController.navigate(Routes.DOCS) },
+                updateInfo = homeViewModel.updateInfo.collectAsStateWithLifecycle().value,
+                updateNotice = homeViewModel.updateNotice.collectAsStateWithLifecycle().value,
+                onDismissUpdate = { homeViewModel.dismissUpdate() },
+                onConsumeUpdateNotice = { homeViewModel.consumeUpdateNotice() },
             )
         }
 

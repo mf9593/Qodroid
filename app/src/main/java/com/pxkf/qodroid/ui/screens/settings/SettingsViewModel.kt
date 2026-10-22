@@ -21,6 +21,7 @@ import com.pxkf.qodroid.data.repository.SettingsRepository
 import com.pxkf.qodroid.di.ApplicationScope
 import com.pxkf.qodroid.engine.EngineHolder
 import com.pxkf.qodroid.engine.EngineSelection
+import com.pxkf.qodroid.engine.VmMode
 import com.pxkf.qodroid.engine.VmState
 import com.pxkf.qodroid.engine.VncStatus
 import com.pxkf.qodroid.engine.VncStatusMonitor
@@ -55,6 +56,7 @@ data class SettingsUiState(
     val vncEnabled: Boolean = true,
     val storageAccessEnabled: Boolean = false,
     val qemuExtraArgs: String = SettingsRepository.DEFAULT_QEMU_EXTRA_ARGS,
+    val windowsQemuExtraArgs: String = "",
     val kernelExtraCmdline: String = SettingsRepository.DEFAULT_KERNEL_EXTRA_CMDLINE,
     val darkTheme: Boolean = false,
     val dynamicColorEnabled: Boolean = false,
@@ -63,6 +65,8 @@ data class SettingsUiState(
     val systemDefaultLanguage: String = "auto",
     val loadBalanceEnabled: Boolean = false,
     val bandwidthMbps: Int = 0,
+    /** Current boot profile — selects which QEMU-extras field the UI shows. */
+    val vmMode: VmMode = VmMode.LINUX,
 )
 
 // Typed intermediates for the three sub-combines below, so a reordered flow
@@ -80,6 +84,7 @@ private data class DisplayAndStorageGroup(
     val vncEnabled: Boolean,
     val storageAccessEnabled: Boolean,
     val qemuExtraArgs: String,
+    val windowsQemuExtraArgs: String,
     val kernelExtraCmdline: String,
 )
 
@@ -124,9 +129,10 @@ class SettingsViewModel @Inject constructor(
             settingsRepository.vncEnabled,
             settingsRepository.storageAccessEnabled,
             settingsRepository.qemuExtraArgs,
+            settingsRepository.windowsQemuExtraArgs,
             settingsRepository.kernelExtraCmdline,
-        ) { vnc, storageAccess, qemu, kernel ->
-            DisplayAndStorageGroup(vnc, storageAccess, qemu, kernel)
+        ) { vnc, storageAccess, qemu, winQemu, kernel ->
+            DisplayAndStorageGroup(vnc, storageAccess, qemu, winQemu, kernel)
         },
         combine(
             settingsRepository.darkTheme,
@@ -142,7 +148,8 @@ class SettingsViewModel @Inject constructor(
         ) { bandwidth, engineSel, lang, sysLang ->
             LocaleRowsGroup(bandwidth, engineSel, lang, sysLang)
         },
-    ) { vm, display, theme, locale ->
+        settingsRepository.vmMode,
+    ) { vm, display, theme, locale, mode ->
         SettingsUiState(
             vmRamMb = vm.vmRamMb,
             vmCpus = vm.vmCpus,
@@ -151,6 +158,7 @@ class SettingsViewModel @Inject constructor(
             vncEnabled = display.vncEnabled,
             storageAccessEnabled = display.storageAccessEnabled,
             qemuExtraArgs = display.qemuExtraArgs,
+            windowsQemuExtraArgs = display.windowsQemuExtraArgs,
             kernelExtraCmdline = display.kernelExtraCmdline,
             darkTheme = theme.darkTheme,
             dynamicColorEnabled = theme.dynamicColorEnabled,
@@ -159,6 +167,7 @@ class SettingsViewModel @Inject constructor(
             systemDefaultLanguage = locale.systemDefaultLanguage,
             loadBalanceEnabled = vm.loadBalanceEnabled,
             bandwidthMbps = locale.bandwidthMbps,
+            vmMode = mode,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
 
@@ -172,12 +181,20 @@ class SettingsViewModel @Inject constructor(
         externalScope.launch { settingsRepository.setQemuExtraArgs(value) }
     }
 
+    fun setWindowsQemuExtraArgs(value: String) {
+        externalScope.launch { settingsRepository.setWindowsQemuExtraArgs(value) }
+    }
+
     fun setKernelExtraCmdline(value: String) {
         externalScope.launch { settingsRepository.setKernelExtraCmdline(value) }
     }
 
     fun resetQemuExtraArgs() {
         externalScope.launch { settingsRepository.setQemuExtraArgs(SettingsRepository.DEFAULT_QEMU_EXTRA_ARGS) }
+    }
+
+    fun resetWindowsQemuExtraArgs() {
+        externalScope.launch { settingsRepository.setWindowsQemuExtraArgs(SettingsRepository.DEFAULT_WINDOWS_QEMU_EXTRA_ARGS) }
     }
 
     fun resetKernelExtraCmdline() {
@@ -239,6 +256,13 @@ class SettingsViewModel @Inject constructor(
 
     fun setAutostartOnBoot(value: Boolean) {
         viewModelScope.launch { settingsRepository.setAutostartOnBoot(value) }
+    }
+
+    val autoCheckUpdates: StateFlow<Boolean> = settingsRepository.autoCheckUpdates
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+    fun setAutoCheckUpdates(value: Boolean) {
+        viewModelScope.launch { settingsRepository.setAutoCheckUpdates(value) }
     }
 
     suspend fun setLanguage(value: String) {

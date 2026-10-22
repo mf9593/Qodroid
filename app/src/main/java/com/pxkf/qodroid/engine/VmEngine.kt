@@ -125,6 +125,8 @@ data class VmConfig(
     val storageSizeGb: Int = 2,
     val storageAccessEnabled: Boolean = false,
     val qemuExtraArgs: String = "",
+    /** Windows-specific extras; empty falls back to [qemuExtraArgs]. */
+    val windowsQemuExtraArgs: String = "",
     val kernelExtraCmdline: String = "",
     val verboseLogging: Boolean = false,
     val x11Dpi: Int = 96,

@@ -126,6 +126,7 @@ fun SettingsScreen(
     val portForwardPartialWarning by viewModel.portForwardPartialWarning.collectAsStateWithLifecycle()
     val usbPassthrough by viewModel.usbPassthroughEnabled.collectAsStateWithLifecycle()
     val autostartOnBoot by viewModel.autostartOnBoot.collectAsStateWithLifecycle()
+    val autoCheckUpdates by viewModel.autoCheckUpdates.collectAsStateWithLifecycle()
 
     // rememberSaveable: changing the language calls activity.recreate(), which
     // would otherwise silently close any open dialog and collapse Advanced.
@@ -273,6 +274,8 @@ fun SettingsScreen(
                     onStorageSizeChange = viewModel::setStorageSizeGb,
                     autostartOnBoot = autostartOnBoot,
                     onAutostartChange = viewModel::setAutostartOnBoot,
+                    autoCheckUpdates = autoCheckUpdates,
+                    onAutoCheckUpdatesChange = viewModel::setAutoCheckUpdates,
                 )
 
                 // ── NETWORK ───────────────────────────────────────────
@@ -395,11 +398,15 @@ fun SettingsScreen(
                     }
                     Spacer(Modifier.height(PodroidTokens.Spacing.MD))
                     AdvancedFieldsBlock(
+                        isWindowsMode = ui.vmMode == com.pxkf.qodroid.engine.VmMode.WINDOWS,
                         qemuExtraArgs = ui.qemuExtraArgs,
+                        windowsQemuExtraArgs = ui.windowsQemuExtraArgs,
                         kernelExtraCmdline = ui.kernelExtraCmdline,
                         onQemuChange = viewModel::setQemuExtraArgs,
+                        onWindowsQemuChange = viewModel::setWindowsQemuExtraArgs,
                         onKernelChange = viewModel::setKernelExtraCmdline,
                         onQemuReset = viewModel::resetQemuExtraArgs,
+                        onWindowsQemuReset = viewModel::resetWindowsQemuExtraArgs,
                         onKernelReset = viewModel::resetKernelExtraCmdline,
                         enabled = vmNotRunning,
                     )
@@ -531,6 +538,8 @@ private fun VmResourcesSection(
     onStorageSizeChange: (Int) -> Unit,
     autostartOnBoot: Boolean,
     onAutostartChange: (Boolean) -> Unit,
+    autoCheckUpdates: Boolean,
+    onAutoCheckUpdatesChange: (Boolean) -> Unit,
 ) {
     PodroidSectionLabel(stringResource(R.string.vm_resources))
     if (!vmNotRunning) {
@@ -585,6 +594,26 @@ private fun VmResourcesSection(
     )
     Text(
         text = stringResource(R.string.autostart_on_boot_desc),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(
+            start = PodroidTokens.Spacing.MD,
+            end = PodroidTokens.Spacing.MD,
+            bottom = PodroidTokens.Spacing.SM,
+        ),
+    )
+    PodroidListRow(
+        label = stringResource(R.string.auto_check_updates),
+        onClick = { onAutoCheckUpdatesChange(!autoCheckUpdates) },
+        rightSlot = {
+            PodroidSwitch(
+                checked = autoCheckUpdates,
+                onCheckedChange = onAutoCheckUpdatesChange,
+            )
+        },
+    )
+    Text(
+        text = stringResource(R.string.auto_check_updates_desc),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(
@@ -955,11 +984,15 @@ private fun UsbPassthroughRow(
 
 @Composable
 private fun AdvancedFieldsBlock(
+    isWindowsMode: Boolean,
     qemuExtraArgs: String,
+    windowsQemuExtraArgs: String,
     kernelExtraCmdline: String,
     onQemuChange: (String) -> Unit,
+    onWindowsQemuChange: (String) -> Unit,
     onKernelChange: (String) -> Unit,
     onQemuReset: () -> Unit,
+    onWindowsQemuReset: () -> Unit,
     onKernelReset: () -> Unit,
     enabled: Boolean,
 ) {
@@ -977,13 +1010,19 @@ private fun AdvancedFieldsBlock(
                 color = MaterialTheme.colorScheme.error,
             )
         }
+        // One field, two stored sets: the boot profile decides which is shown
+        // and edited, so the box always matches the VM that will start.
         AdvancedTextSetting(
-            label = stringResource(R.string.extra_qemu_args),
-            helper = stringResource(R.string.qemu_args_helper),
-            value = qemuExtraArgs,
+            label = stringResource(
+                if (isWindowsMode) R.string.extra_windows_qemu_args else R.string.extra_qemu_args
+            ),
+            helper = stringResource(
+                if (isWindowsMode) R.string.windows_qemu_args_helper else R.string.qemu_args_helper
+            ),
+            value = if (isWindowsMode) windowsQemuExtraArgs else qemuExtraArgs,
             enabled = enabled,
-            onValueChange = onQemuChange,
-            onReset = onQemuReset,
+            onValueChange = if (isWindowsMode) onWindowsQemuChange else onQemuChange,
+            onReset = if (isWindowsMode) onWindowsQemuReset else onQemuReset,
             minLines = 4,
         )
         AdvancedTextSetting(
