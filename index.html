@@ -5,7 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Qodroid — 在 Android 上运行 Linux 与 Windows 虚拟机</title>
 <meta name="description" content="Qodroid：基于 ExTV/Podroid 修改的 QEMU/AVF 虚拟机应用。无需 root，在手机上运行真实 Alpine Linux 容器桌面与 x86 Windows 虚拟机。" />
+<meta name="theme-color" content="#070b09" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f4faf6" media="(prefers-color-scheme: light)" />
+<script>
+  // Apply the saved theme (or the system preference) before first paint so the
+  // page never flashes the wrong palette.
+  (function () {
+    var root = document.documentElement;
+    var saved = null;
+    try { saved = localStorage.getItem('qodroid-theme'); } catch (e) {}
+    var sys = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+      ? 'light' : 'dark';
+    root.dataset.theme = saved || sys;
+  })();
+</script>
 <style>
+  /* ── dark (default) ── */
   :root{
     --bg:#070b09;
     --card:rgba(255,255,255,.045);
@@ -14,8 +29,69 @@
     --muted:#93a89c;
     --accent:#22c55e;
     --accent-2:#16a34a;
-    --accent-soft:rgba(34,197,94,.16);
     --radius:20px;
+    --nav-bg:rgba(7,11,9,.72);
+    --nav-border:rgba(255,255,255,.06);
+    --dot-color:rgba(255,255,255,.05);
+    --h1-from:#ffffff;
+    --h1-to:#b9d6c4;
+    --btn-primary-text:#04160b;
+    --btn-ghost-bg:rgba(255,255,255,.03);
+    --btn-ghost-hover:rgba(255,255,255,.07);
+    --code-color:#bfe8cd;
+    --code-bg:rgba(34,197,94,.10);
+    --shot-from:rgba(255,255,255,.13);
+    --shot-to:rgba(255,255,255,.03);
+    --shot-shadow:rgba(0,0,0,.45);
+    --shot-bg:#0c120e;
+    --feat-bg:rgba(255,255,255,.028);
+    --feat-border:rgba(255,255,255,.06);
+    --feat-hover-bg:rgba(34,197,94,.055);
+    --divider:rgba(255,255,255,.06);
+    --step-color:#c9f7d6;
+    --note-bg:rgba(34,197,94,.065);
+    --note-border:rgba(34,197,94,.55);
+    --band-file:#8fdfa8;
+    --footer-link:#9fe0b5;
+    --glow-1:rgba(34,197,94,.16);
+    --glow-2:rgba(22,163,74,.10);
+    --glow-3:rgba(74,222,128,.07);
+  }
+  /* ── light ── */
+  :root[data-theme="light"]{
+    --bg:#f4faf6;
+    --card:rgba(255,255,255,.78);
+    --card-border:rgba(16,40,26,.10);
+    --text:#102018;
+    --muted:#52685c;
+    --accent:#16a34a;
+    --accent-2:#15803d;
+    --nav-bg:rgba(244,250,246,.82);
+    --nav-border:rgba(16,40,26,.08);
+    --dot-color:rgba(16,40,26,.05);
+    --h1-from:#0b1710;
+    --h1-to:#2f5a42;
+    --btn-primary-text:#04160b;
+    --btn-ghost-bg:rgba(16,40,26,.03);
+    --btn-ghost-hover:rgba(16,40,26,.07);
+    --code-color:#146c36;
+    --code-bg:rgba(34,197,94,.12);
+    --shot-from:rgba(255,255,255,.95);
+    --shot-to:rgba(16,40,26,.05);
+    --shot-shadow:rgba(16,40,26,.18);
+    --shot-bg:#eef7f1;
+    --feat-bg:rgba(16,40,26,.025);
+    --feat-border:rgba(16,40,26,.07);
+    --feat-hover-bg:rgba(34,197,94,.08);
+    --divider:rgba(16,40,26,.08);
+    --step-color:#146c36;
+    --note-bg:rgba(34,197,94,.09);
+    --note-border:rgba(22,163,74,.55);
+    --band-file:#15803d;
+    --footer-link:#15803d;
+    --glow-1:rgba(34,197,94,.12);
+    --glow-2:rgba(22,163,74,.07);
+    --glow-3:rgba(74,222,128,.06);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -23,18 +99,19 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
     background:var(--bg);color:var(--text);line-height:1.7;
     -webkit-font-smoothing:antialiased;overflow-x:hidden;
+    transition:background-color .25s,color .25s;
   }
   body::before{
     content:"";position:fixed;inset:0;z-index:-2;
     background:
-      radial-gradient(900px 600px at 50% -12%, rgba(34,197,94,.16), transparent 62%),
-      radial-gradient(700px 500px at 88% 18%, rgba(22,163,74,.10), transparent 60%),
-      radial-gradient(640px 420px at 8% 40%, rgba(74,222,128,.07), transparent 62%),
+      radial-gradient(900px 600px at 50% -12%, var(--glow-1), transparent 62%),
+      radial-gradient(700px 500px at 88% 18%, var(--glow-2), transparent 60%),
+      radial-gradient(640px 420px at 8% 40%, var(--glow-3), transparent 62%),
       var(--bg);
   }
   body::after{
     content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.30;
-    background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-image:radial-gradient(var(--dot-color) 1px, transparent 1px);
     background-size:28px 28px;
     mask-image:radial-gradient(ellipse at 50% 0,#000 20%,transparent 75%);
     -webkit-mask-image:radial-gradient(ellipse at 50% 0,#000 20%,transparent 75%);
@@ -45,13 +122,14 @@
   nav{
     position:sticky;top:0;z-index:50;
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    background:rgba(7,11,9,.72);border-bottom:1px solid rgba(255,255,255,.06);
+    background:var(--nav-bg);border-bottom:1px solid var(--nav-border);
+    transition:background-color .25s;
   }
   nav .wrap{display:flex;align-items:center;gap:10px;height:56px;min-width:0}
   nav img{width:24px;height:24px;border-radius:6px;flex:0 0 auto}
   nav .brand{font-weight:700;letter-spacing:.3px;white-space:nowrap}
   nav .spacer{flex:1}
-  nav a{color:var(--muted);text-decoration:none;font-size:14px;white-space:nowrap;transition:.2s}
+  nav a{color:var(--muted);text-decoration:none;font-size:14px;white-space:nowrap;transition:color .2s}
   nav a:hover{color:var(--text)}
   nav .navlink{display:none}
   nav .gh{
@@ -61,17 +139,26 @@
   @media(min-width:680px){
     nav .navlink{display:inline;margin-left:20px}
   }
+  .theme-toggle{
+    display:inline-flex;align-items:center;justify-content:center;
+    height:30px;padding:0 11px;margin-left:10px;
+    color:var(--text);background:transparent;
+    border:1px solid var(--card-border);border-radius:10px;
+    font-size:12.5px;font-family:inherit;cursor:pointer;white-space:nowrap;
+    transition:background-color .2s;
+  }
+  .theme-toggle:hover{background:var(--btn-ghost-hover)}
 
   /* ── hero ── */
   header{padding:64px 0 20px;text-align:center;position:relative}
   .logo-big{
     width:96px;height:96px;border-radius:24px;display:inline-block;
-    box-shadow:0 18px 52px rgba(34,197,94,.30),0 0 0 1px rgba(255,255,255,.10) inset;
+    box-shadow:0 18px 52px rgba(34,197,94,.28),0 0 0 1px var(--card-border) inset;
     margin-bottom:20px;
   }
   h1{
     font-size:clamp(30px,9vw,58px);line-height:1.08;letter-spacing:-1px;
-    background:linear-gradient(180deg,#ffffff 20%,#b9d6c4 100%);
+    background:linear-gradient(180deg,var(--h1-from) 20%,var(--h1-to) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     max-width:100%;overflow-wrap:anywhere;
   }
@@ -85,15 +172,15 @@
     text-decoration:none;transition:.2s;border:1px solid transparent;
   }
   .btn-primary{
-    color:#04160b;background:linear-gradient(135deg,#4ade80,#22c55e);
+    color:var(--btn-primary-text);background:linear-gradient(135deg,#4ade80,#22c55e);
     box-shadow:0 12px 30px rgba(34,197,94,.32);
   }
   .btn-primary:hover{transform:translateY(-1px);filter:brightness(1.05)}
-  .btn-ghost{color:var(--text);border-color:var(--card-border);background:rgba(255,255,255,.03)}
-  .btn-ghost:hover{background:rgba(255,255,255,.07)}
+  .btn-ghost{color:var(--text);border-color:var(--card-border);background:var(--btn-ghost-bg)}
+  .btn-ghost:hover{background:var(--btn-ghost-hover)}
   .meta-line{color:var(--muted);font-size:13px;margin-top:14px;padding:0 8px;overflow-wrap:anywhere}
   .meta-line b{color:var(--text)}
-  .meta-line code{color:#bfe8cd;background:rgba(34,197,94,.10);padding:2px 7px;border-radius:6px;font-size:12px;word-break:break-all}
+  .meta-line code{color:var(--code-color);background:var(--code-bg);padding:2px 7px;border-radius:6px;font-size:12px;word-break:break-all}
 
   /* ── screenshots ── */
   .shots{padding:40px 0 4px}
@@ -108,13 +195,13 @@
   .shot{
     flex:0 0 auto;width:min(220px,60vw);scroll-snap-align:center;
     border-radius:24px;padding:5px;
-    background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.03));
+    background:linear-gradient(160deg,var(--shot-from),var(--shot-to));
     border:1px solid var(--card-border);
-    box-shadow:0 22px 46px rgba(0,0,0,.45);
+    box-shadow:0 22px 46px var(--shot-shadow);
     transition:transform .25s;
   }
   .shot:hover{transform:translateY(-4px)}
-  .shot img{width:100%;height:auto;display:block;border-radius:20px;background:#0c120e}
+  .shot img{width:100%;height:auto;display:block;border-radius:20px;background:var(--shot-bg)}
 
   /* ── sections ── */
   section{padding:30px 0}
@@ -129,11 +216,11 @@
   .card > p{overflow-wrap:anywhere}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
   .feat{
-    background:rgba(255,255,255,.028);border:1px solid rgba(255,255,255,.06);
+    background:var(--feat-bg);border:1px solid var(--feat-border);
     border-radius:14px;padding:18px;transition:.2s;
     border-left:3px solid rgba(34,197,94,.45);
   }
-  .feat:hover{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.055)}
+  .feat:hover{border-color:rgba(34,197,94,.35);background:var(--feat-hover-bg)}
   .feat h3{font-size:15.5px;margin-bottom:5px}
   .feat p{color:var(--muted);font-size:13.5px;line-height:1.6}
   .two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
@@ -142,19 +229,19 @@
   ol.steps{list-style:none;counter-reset:s;margin-top:4px}
   ol.steps li{
     counter-increment:s;position:relative;padding:10px 0 10px 44px;
-    color:var(--muted);font-size:14px;border-bottom:1px solid rgba(255,255,255,.06);
+    color:var(--muted);font-size:14px;border-bottom:1px solid var(--divider);
   }
   ol.steps li:last-child{border-bottom:none}
   ol.steps li::before{
     content:counter(s);position:absolute;left:0;top:9px;
     width:27px;height:27px;border-radius:9px;display:flex;align-items:center;justify-content:center;
-    font-size:13px;font-weight:700;color:#c9f7d6;
-    background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.32);
+    font-size:13px;font-weight:700;color:var(--step-color);
+    background:var(--code-bg);border:1px solid rgba(34,197,94,.32);
   }
   ol.steps b{color:var(--text)}
   .note{
-    border-left:3px solid rgba(34,197,94,.55);
-    background:rgba(34,197,94,.065);border-radius:0 12px 12px 0;
+    border-left:3px solid var(--note-border);
+    background:var(--note-bg);border-radius:0 12px 12px 0;
     padding:12px 15px;color:var(--muted);font-size:13.5px;margin-top:14px;
     overflow-wrap:anywhere;
   }
@@ -166,25 +253,25 @@
     background:linear-gradient(135deg,#4ade80,#16a34a);
     box-shadow:0 0 10px rgba(34,197,94,.45);
   }
-  code.k{color:#bfe8cd;background:rgba(34,197,94,.10);padding:2px 6px;border-radius:5px;font-size:12.5px;word-break:break-all}
+  code.k{color:var(--code-color);background:var(--code-bg);padding:2px 6px;border-radius:5px;font-size:12.5px;word-break:break-all}
 
   /* ── download band ── */
   .band{
     text-align:center;padding:40px 20px;border-radius:var(--radius);
     background:
-      radial-gradient(500px 240px at 50% 0%,rgba(34,197,94,.17),transparent 72%),
+      radial-gradient(500px 240px at 50% 0%,var(--glow-1),transparent 72%),
       var(--card);
     border:1px solid var(--card-border);
   }
   .band h2{font-size:clamp(22px,5.4vw,32px);letter-spacing:-.5px}
   .band p{color:var(--muted);margin:8px 0 20px;font-size:14px}
   .band .file{
-    color:#8fdfa8;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:var(--band-file);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
     font-size:12.5px;margin-top:14px;overflow-wrap:anywhere;
   }
 
   footer{padding:42px 0 64px;text-align:center;color:var(--muted);font-size:13px}
-  footer a{color:#9fe0b5;text-decoration:none}
+  footer a{color:var(--footer-link);text-decoration:none}
   footer a:hover{text-decoration:underline}
   .footer-links{margin-bottom:10px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
   footer > .wrap > div:last-child{padding:0 8px}
@@ -201,6 +288,7 @@
     <a class="navlink" href="#features">特性</a>
     <a class="navlink" href="#windows">Windows</a>
     <a class="gh" href="https://github.com/mf9593/Qodroid">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深浅色">浅色</button>
   </div>
 </nav>
 
@@ -246,7 +334,7 @@
       <p class="sub">一台跑在手机里的完整虚拟机，不是 chroot、不是 proot。</p>
       <p style="color:var(--muted);font-size:14.5px">
         Qodroid 基于
-        <a href="https://github.com/ExTV/Podroid" style="color:#9fe0b5;text-decoration:none">ExTV/Podroid</a>
+        <a href="https://github.com/ExTV/Podroid" style="color:var(--footer-link);text-decoration:none">ExTV/Podroid</a>
         修改而来（GPL v2，包名 <code class="k">com.pxkf.qodroid</code>）。它在 arm64 手机上运行带独立内核的
         Alpine Linux，Podman / Docker / LXC 的行为与服务器一致；也可以加载自己的磁盘镜像，
         启动 x86 Windows 虚拟机。内置终端、图形桌面查看器与容器管理，开箱即用。
@@ -360,6 +448,29 @@
     <div>Qodroid · 基于 ExTV/Podroid 修改 · 以 GNU GPL v2 发布</div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+
+    function label() {
+      // The button offers the opposite theme.
+      btn.textContent = root.dataset.theme === 'light' ? '深色' : '浅色';
+      btn.setAttribute('aria-label',
+        root.dataset.theme === 'light' ? '切换到深色模式' : '切换到浅色模式');
+    }
+
+    btn.addEventListener('click', function () {
+      var next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      try { localStorage.setItem('qodroid-theme', next); } catch (e) {}
+      label();
+    });
+
+    label();
+  })();
+</script>
 
 </body>
 </html>
