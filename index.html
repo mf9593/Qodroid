@@ -7,15 +7,14 @@
 <meta name="description" content="Qodroid：基于 ExTV/Podroid 修改的 QEMU/AVF 虚拟机应用。无需 root，在手机上运行真实 Alpine Linux 容器桌面与 x86 Windows 虚拟机。" />
 <style>
   :root{
-    --bg:#08090c;
-    --bg2:#0d1017;
+    --bg:#070b09;
     --card:rgba(255,255,255,.045);
     --card-border:rgba(255,255,255,.09);
-    --text:#eef1f7;
-    --muted:#98a2b3;
-    --accent:#5b8cff;
-    --accent-2:#8b5cf6;
-    --accent-3:#22d3ee;
+    --text:#edf5f0;
+    --muted:#93a89c;
+    --accent:#22c55e;
+    --accent-2:#16a34a;
+    --accent-soft:rgba(34,197,94,.16);
     --radius:20px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -28,160 +27,167 @@
   body::before{
     content:"";position:fixed;inset:0;z-index:-2;
     background:
-      radial-gradient(900px 600px at 50% -10%, rgba(91,140,255,.20), transparent 60%),
-      radial-gradient(700px 500px at 85% 15%, rgba(139,92,246,.14), transparent 60%),
-      radial-gradient(600px 400px at 10% 35%, rgba(34,211,238,.10), transparent 60%),
+      radial-gradient(900px 600px at 50% -12%, rgba(34,197,94,.16), transparent 62%),
+      radial-gradient(700px 500px at 88% 18%, rgba(22,163,74,.10), transparent 60%),
+      radial-gradient(640px 420px at 8% 40%, rgba(74,222,128,.07), transparent 62%),
       var(--bg);
   }
   body::after{
-    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
-    background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.30;
+    background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
     background-size:28px 28px;
     mask-image:radial-gradient(ellipse at 50% 0,#000 20%,transparent 75%);
     -webkit-mask-image:radial-gradient(ellipse at 50% 0,#000 20%,transparent 75%);
   }
-  .wrap{width:min(1120px,100% - 40px);margin:0 auto}
+  .wrap{width:min(1120px,100% - 36px);margin:0 auto}
 
   /* ── nav ── */
   nav{
     position:sticky;top:0;z-index:50;
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    background:rgba(8,9,12,.65);border-bottom:1px solid rgba(255,255,255,.06);
+    background:rgba(7,11,9,.72);border-bottom:1px solid rgba(255,255,255,.06);
   }
-  nav .wrap{display:flex;align-items:center;gap:12px;height:60px}
-  nav img{width:26px;height:26px;border-radius:7px}
-  nav .brand{font-weight:700;letter-spacing:.4px}
+  nav .wrap{display:flex;align-items:center;gap:10px;height:56px;min-width:0}
+  nav img{width:24px;height:24px;border-radius:6px;flex:0 0 auto}
+  nav .brand{font-weight:700;letter-spacing:.3px;white-space:nowrap}
   nav .spacer{flex:1}
-  nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:18px;transition:.2s}
+  nav a{color:var(--muted);text-decoration:none;font-size:14px;white-space:nowrap;transition:.2s}
   nav a:hover{color:var(--text)}
+  nav .navlink{display:none}
   nav .gh{
-    display:inline-flex;align-items:center;gap:6px;color:var(--text);
+    display:inline-flex;align-items:center;color:var(--text);
     border:1px solid var(--card-border);border-radius:10px;padding:6px 12px;font-size:13px;
+  }
+  @media(min-width:680px){
+    nav .navlink{display:inline;margin-left:20px}
   }
 
   /* ── hero ── */
-  header{padding:72px 0 24px;text-align:center;position:relative}
+  header{padding:64px 0 20px;text-align:center;position:relative}
   .logo-big{
-    width:104px;height:104px;border-radius:26px;display:inline-block;
-    box-shadow:0 20px 60px rgba(91,140,255,.35),0 0 0 1px rgba(255,255,255,.10) inset;
-    margin-bottom:22px;
+    width:96px;height:96px;border-radius:24px;display:inline-block;
+    box-shadow:0 18px 52px rgba(34,197,94,.30),0 0 0 1px rgba(255,255,255,.10) inset;
+    margin-bottom:20px;
   }
   h1{
-    font-size:clamp(38px,7vw,64px);line-height:1.05;letter-spacing:-1.5px;
-    background:linear-gradient(180deg,#fff 20%,#a8b6d6 100%);
+    font-size:clamp(30px,9vw,58px);line-height:1.08;letter-spacing:-1px;
+    background:linear-gradient(180deg,#ffffff 20%,#b9d6c4 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
+    max-width:100%;overflow-wrap:anywhere;
   }
-  .tagline{color:var(--muted);font-size:clamp(15px,2.6vw,19px);margin-top:14px}
+  .tagline{color:var(--muted);font-size:clamp(14px,3.4vw,18px);margin-top:12px;padding:0 6px}
   .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:20px}
   .badges img{height:22px;opacity:.95}
-  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
   .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:14px 30px;border-radius:14px;font-size:16px;font-weight:650;
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:13px 28px;border-radius:13px;font-size:15.5px;font-weight:650;
     text-decoration:none;transition:.2s;border:1px solid transparent;
   }
   .btn-primary{
-    color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    box-shadow:0 12px 34px rgba(91,140,255,.36);
+    color:#04160b;background:linear-gradient(135deg,#4ade80,#22c55e);
+    box-shadow:0 12px 30px rgba(34,197,94,.32);
   }
-  .btn-primary:hover{transform:translateY(-1px);filter:brightness(1.08)}
+  .btn-primary:hover{transform:translateY(-1px);filter:brightness(1.05)}
   .btn-ghost{color:var(--text);border-color:var(--card-border);background:rgba(255,255,255,.03)}
   .btn-ghost:hover{background:rgba(255,255,255,.07)}
-  .meta-line{color:var(--muted);font-size:13px;margin-top:14px}
-  .meta-line code{color:#c9d4ea;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:6px;font-size:12px}
+  .meta-line{color:var(--muted);font-size:13px;margin-top:14px;padding:0 8px;overflow-wrap:anywhere}
+  .meta-line b{color:var(--text)}
+  .meta-line code{color:#bfe8cd;background:rgba(34,197,94,.10);padding:2px 7px;border-radius:6px;font-size:12px;word-break:break-all}
 
   /* ── screenshots ── */
-  .shots{padding:46px 0 10px}
-  .shots-head{text-align:center;margin-bottom:26px}
-  .shots-head h2{font-size:clamp(22px,4vw,30px);letter-spacing:-.5px}
-  .shots-head p{color:var(--muted);font-size:14px;margin-top:6px}
+  .shots{padding:40px 0 4px}
+  .shots-head{text-align:center;margin-bottom:22px}
+  .shots-head h2{font-size:clamp(21px,5vw,29px);letter-spacing:-.4px}
+  .shots-head p{color:var(--muted);font-size:13.5px;margin-top:6px}
   .shot-row{
-    display:flex;gap:18px;overflow-x:auto;padding:14px 6px 26px;
+    display:flex;gap:16px;overflow-x:auto;padding:12px 4px 24px;
     scroll-snap-type:x mandatory;scrollbar-width:none;
   }
   .shot-row::-webkit-scrollbar{display:none}
   .shot{
-    flex:0 0 auto;width:min(230px,62vw);scroll-snap-align:center;
-    border-radius:26px;padding:6px;
-    background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.03));
+    flex:0 0 auto;width:min(220px,60vw);scroll-snap-align:center;
+    border-radius:24px;padding:5px;
+    background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.03));
     border:1px solid var(--card-border);
-    box-shadow:0 24px 50px rgba(0,0,0,.45);
+    box-shadow:0 22px 46px rgba(0,0,0,.45);
     transition:transform .25s;
   }
   .shot:hover{transform:translateY(-4px)}
-  .shot img{
-    width:100%;height:auto;display:block;border-radius:21px;background:#111;
-  }
+  .shot img{width:100%;height:auto;display:block;border-radius:20px;background:#0c120e}
 
   /* ── sections ── */
-  section{padding:34px 0}
+  section{padding:30px 0}
   .card{
     background:var(--card);border:1px solid var(--card-border);
-    border-radius:var(--radius);padding:30px 30px;
+    border-radius:var(--radius);padding:26px 24px;
     backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   }
-  .card h2{font-size:clamp(21px,3.4vw,27px);letter-spacing:-.4px;margin-bottom:8px}
-  .card .sub{color:var(--muted);font-size:14.5px;margin-bottom:20px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  @media(min-width:700px){.card{padding:32px 32px}}
+  .card h2{font-size:clamp(20px,4.6vw,26px);letter-spacing:-.3px;margin-bottom:8px}
+  .card .sub{color:var(--muted);font-size:14px;margin-bottom:20px}
+  .card > p{overflow-wrap:anywhere}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
   .feat{
     background:rgba(255,255,255,.028);border:1px solid rgba(255,255,255,.06);
-    border-radius:14px;padding:18px 18px;transition:.2s;
+    border-radius:14px;padding:18px;transition:.2s;
+    border-left:3px solid rgba(34,197,94,.45);
   }
-  .feat:hover{border-color:rgba(91,140,255,.35);background:rgba(91,140,255,.06)}
-  .feat .ico{
-    width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,rgba(91,140,255,.22),rgba(139,92,246,.22));
-    border:1px solid rgba(91,140,255,.28);margin-bottom:12px;font-size:17px;
-  }
+  .feat:hover{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.055)}
   .feat h3{font-size:15.5px;margin-bottom:5px}
   .feat p{color:var(--muted);font-size:13.5px;line-height:1.6}
-  .two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+  .two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
   @media(max-width:760px){.two-col{grid-template-columns:1fr}}
 
   ol.steps{list-style:none;counter-reset:s;margin-top:4px}
   ol.steps li{
-    counter-increment:s;position:relative;padding:10px 0 10px 46px;
-    color:var(--muted);font-size:14.5px;border-bottom:1px solid rgba(255,255,255,.06);
+    counter-increment:s;position:relative;padding:10px 0 10px 44px;
+    color:var(--muted);font-size:14px;border-bottom:1px solid rgba(255,255,255,.06);
   }
   ol.steps li:last-child{border-bottom:none}
   ol.steps li::before{
     content:counter(s);position:absolute;left:0;top:9px;
-    width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;
-    font-size:13px;font-weight:700;color:#cfdcff;
-    background:rgba(91,140,255,.14);border:1px solid rgba(91,140,255,.3);
+    width:27px;height:27px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;color:#c9f7d6;
+    background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.32);
   }
   ol.steps b{color:var(--text)}
   .note{
-    border-left:3px solid rgba(91,140,255,.55);
-    background:rgba(91,140,255,.07);border-radius:0 12px 12px 0;
-    padding:12px 16px;color:var(--muted);font-size:13.5px;margin-top:14px;
+    border-left:3px solid rgba(34,197,94,.55);
+    background:rgba(34,197,94,.065);border-radius:0 12px 12px 0;
+    padding:12px 15px;color:var(--muted);font-size:13.5px;margin-top:14px;
+    overflow-wrap:anywhere;
   }
   .note b{color:var(--text)}
   ul.check{list-style:none;display:grid;gap:9px}
-  ul.check li{position:relative;padding-left:26px;color:var(--muted);font-size:14px}
+  ul.check li{position:relative;padding-left:24px;color:var(--muted);font-size:13.8px;overflow-wrap:anywhere}
   ul.check li::before{
-    content:"";position:absolute;left:0;top:7px;width:14px;height:14px;border-radius:50%;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    box-shadow:0 0 12px rgba(91,140,255,.5);
+    content:"";position:absolute;left:0;top:7px;width:13px;height:13px;border-radius:50%;
+    background:linear-gradient(135deg,#4ade80,#16a34a);
+    box-shadow:0 0 10px rgba(34,197,94,.45);
   }
-  code.k{color:#c9d4ea;background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;font-size:12.5px}
+  code.k{color:#bfe8cd;background:rgba(34,197,94,.10);padding:2px 6px;border-radius:5px;font-size:12.5px;word-break:break-all}
 
   /* ── download band ── */
   .band{
-    text-align:center;padding:44px 24px;border-radius:var(--radius);
+    text-align:center;padding:40px 20px;border-radius:var(--radius);
     background:
-      radial-gradient(500px 240px at 50% 0%,rgba(91,140,255,.22),transparent 70%),
+      radial-gradient(500px 240px at 50% 0%,rgba(34,197,94,.17),transparent 72%),
       var(--card);
     border:1px solid var(--card-border);
   }
-  .band h2{font-size:clamp(24px,4.4vw,34px);letter-spacing:-.6px}
-  .band p{color:var(--muted);margin:8px 0 22px;font-size:14.5px}
-  .band .file{color:#8fb0ff;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;margin-top:14px}
+  .band h2{font-size:clamp(22px,5.4vw,32px);letter-spacing:-.5px}
+  .band p{color:var(--muted);margin:8px 0 20px;font-size:14px}
+  .band .file{
+    color:#8fdfa8;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12.5px;margin-top:14px;overflow-wrap:anywhere;
+  }
 
-  footer{padding:46px 0 70px;text-align:center;color:var(--muted);font-size:13px}
-  footer a{color:#9db8ff;text-decoration:none}
+  footer{padding:42px 0 64px;text-align:center;color:var(--muted);font-size:13px}
+  footer a{color:#9fe0b5;text-decoration:none}
   footer a:hover{text-decoration:underline}
-  .footer-links{margin-bottom:10px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+  .footer-links{margin-bottom:10px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  footer > .wrap > div:last-child{padding:0 8px}
 </style>
 </head>
 <body>
@@ -191,9 +197,9 @@
     <img src="docs/qodroid-logo.png" alt="Qodroid" />
     <span class="brand">Qodroid</span>
     <span class="spacer"></span>
-    <a href="#shots">截图</a>
-    <a href="#features">特性</a>
-    <a href="#windows">Windows</a>
+    <a class="navlink" href="#shots">截图</a>
+    <a class="navlink" href="#features">特性</a>
+    <a class="navlink" href="#windows">Windows</a>
     <a class="gh" href="https://github.com/mf9593/Qodroid">GitHub</a>
   </div>
 </nav>
@@ -238,9 +244,9 @@
     <div class="card">
       <h2>这是什么</h2>
       <p class="sub">一台跑在手机里的完整虚拟机，不是 chroot、不是 proot。</p>
-      <p style="color:var(--muted);font-size:15px">
+      <p style="color:var(--muted);font-size:14.5px">
         Qodroid 基于
-        <a href="https://github.com/ExTV/Podroid" style="color:#9db8ff;text-decoration:none">ExTV/Podroid</a>
+        <a href="https://github.com/ExTV/Podroid" style="color:#9fe0b5;text-decoration:none">ExTV/Podroid</a>
         修改而来（GPL v2，包名 <code class="k">com.pxkf.qodroid</code>）。它在 arm64 手机上运行带独立内核的
         Alpine Linux，Podman / Docker / LXC 的行为与服务器一致；也可以加载自己的磁盘镜像，
         启动 x86 Windows 虚拟机。内置终端、图形桌面查看器与容器管理，开箱即用。
@@ -255,47 +261,38 @@
       <p class="sub">为日常使用与折腾都留了空间</p>
       <div class="grid">
         <div class="feat">
-          <div class="ico">▣</div>
           <h3>真实的 Linux VM</h3>
           <p>Alpine + 自编译内核，可安装 Podman / Docker / LXC，与服务器行为一致。</p>
         </div>
         <div class="feat">
-          <div class="ico">▤</div>
           <h3>Windows 支持</h3>
           <p>加载自有磁盘镜像，q35 + OVMF/UEFI 固件，内置 VNC 查看器看桌面。</p>
         </div>
         <div class="feat">
-          <div class="ico">⚡</div>
           <h3>双引擎</h3>
           <p>普通设备用 QEMU（TCG）；支持 pKVM 的设备可选 AVF 硬件加速。</p>
         </div>
         <div class="feat">
-          <div class="ico">❯</div>
           <h3>内置终端</h3>
           <p>完整 xterm-256color，多主题字体，实时改窗口大小，快捷键齐全。</p>
         </div>
         <div class="feat">
-          <div class="ico">▦</div>
           <h3>X11 / VNC 桌面</h3>
           <p>触摸、键盘、鼠标与音频；触摸板模式默认开启，窗口可拖动。</p>
         </div>
         <div class="feat">
-          <div class="ico">▤</div>
           <h3>容器备份</h3>
           <p>备份 / 恢复 podman 与 docker 的容器和镜像，自动检测可用引擎。</p>
         </div>
         <div class="feat">
-          <div class="ico">⇄</div>
           <h3>共享文件夹</h3>
           <p>把手机 Download 目录挂进虚拟机，备份与文件交换不用来回拷贝。</p>
         </div>
         <div class="feat">
-          <div class="ico">⌁</div>
           <h3>SSH 与端口转发</h3>
           <p>从电脑 ssh 进虚拟机，或把 guest 端口暴露到局域网。</p>
         </div>
         <div class="feat">
-          <div class="ico">文</div>
           <h3>中英双语</h3>
           <p>内置使用文档与常见问题，离线可读；许可证全文内置。</p>
         </div>
@@ -353,13 +350,15 @@
 </div>
 
 <footer>
-  <div class="footer-links">
-    <a href="https://github.com/mf9593/Qodroid">GitHub</a>
-    <a href="https://github.com/mf9593/Qodroid/releases">Releases</a>
-    <a href="https://github.com/mf9593/Qodroid/blob/main/LICENSE">License (GPL v2)</a>
-    <a href="https://github.com/ExTV/Podroid">上游 Podroid</a>
+  <div class="wrap">
+    <div class="footer-links">
+      <a href="https://github.com/mf9593/Qodroid">GitHub</a>
+      <a href="https://github.com/mf9593/Qodroid/releases">Releases</a>
+      <a href="https://github.com/mf9593/Qodroid/blob/main/LICENSE">License (GPL v2)</a>
+      <a href="https://github.com/ExTV/Podroid">上游 Podroid</a>
+    </div>
+    <div>Qodroid · 基于 ExTV/Podroid 修改 · 以 GNU GPL v2 发布</div>
   </div>
-  <div>Qodroid · 基于 ExTV/Podroid 修改 · 以 GNU GPL v2 发布</div>
 </footer>
 
 </body>
